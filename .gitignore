@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### aws rds 연결 정보 ###
+application-aws.properties
