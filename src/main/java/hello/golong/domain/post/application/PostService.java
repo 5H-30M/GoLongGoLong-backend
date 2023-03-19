@@ -26,9 +26,14 @@ public class PostService {
         postDto.setCreated_at(LocalDateTime.now());
         postDto.setStatus(0);
 
-        //TODO : builder 수정
-        Post post = new Post(null, postDto.getTitle(), postDto.getStatus(), postDto.getContent(),
-                postDto.getUploader_id(), postDto.getCreated_at(), postDto.getPeriod(), postDto.getRegion());
+        Post post = Post.builder()
+                .title(postDto.getTitle())
+                .status(postDto.getStatus())
+                .content(postDto.getContent())
+                .uploader_id(postDto.getUploader_id())
+                .created_at(postDto.getCreated_at())
+                .period(postDto.getPeriod())
+                .region(postDto.getRegion()).build();
 
         postRepository.save(post);
         postDto.setPost_id(post.getPost_id());
@@ -82,5 +87,12 @@ public class PostService {
 
         return postDto;
 
+    }
+
+    public void deletePost(Long post_id) {
+        Optional<Post> postOptional = postRepository.findById(post_id);
+        if(postOptional.isPresent()) {
+            postRepository.deleteById(post_id);
+        }
     }
 }

@@ -3,6 +3,7 @@ package hello.golong.domain.post.api;
 import hello.golong.domain.post.application.PostService;
 import hello.golong.domain.post.dto.PostDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,13 @@ public class PostController {
     public ResponseEntity<PostDto> getPost(@PathVariable("post_id") Long post_id) {
         PostDto postDto = postService.findPost(post_id);
         return ResponseEntity.ok().body(postDto);
+    }
+
+    @DeleteMapping("/{post_id}")
+    public ResponseEntity<Void> deletePost(@PathVariable("post_id") Long post_id) {
+        postService.deletePost(post_id);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
 }
