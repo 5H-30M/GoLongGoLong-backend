@@ -1,11 +1,13 @@
 package hello.golong.domain.post.application;
 
+import hello.golong.domain.img.application.ImgService;
 import hello.golong.domain.post.dao.PostRepository;
 import hello.golong.domain.post.domain.Post;
 import hello.golong.domain.post.dto.PostDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,20 +17,29 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final ImgService imgService;
 
     @Autowired
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, ImgService imgService) {
         this.postRepository = postRepository;
+        this.imgService = imgService;
     }
 
-    public PostDto createPost(PostDto postDto) {
+    public PostDto createPost(PostDto postDto) throws IOException {
 
         postDto.setCreated_at(LocalDateTime.now());
         postDto.setStatus(0);
 
-        //TODO : builder 수정
-        Post post = new Post(null, postDto.getTitle(), postDto.getStatus(), postDto.getContent(),
-                postDto.getUploader_id(), postDto.getCreated_at(), postDto.getPeriod(), postDto.getRegion());
+        imgService.saveImg(postDto.getImages(), postDto.getPost_id(), 0L);
+
+        Post post = Post.builder()
+                .title(postDto.getTitle())
+                .status(postDto.getStatus())
+                .content(postDto.getContent())
+                .uploader_id(postDto.getUploader_id())
+                .created_at(postDto.getCreated_at())
+                .period(postDto.getPeriod())
+                .region(postDto.getRegion()).build();
 
         postRepository.save(post);
         postDto.setPost_id(post.getPost_id());
@@ -41,17 +52,20 @@ public class PostService {
         List<Post> posts = postRepository.findAll();
         List<PostDto> postDtos = new ArrayList<>();
 
-        //TODO : Builder로 수정하기
         for(Post post : posts) {
-            PostDto postDto = new PostDto(
-                    post.getPost_id(),
-                    post.getTitle(),
-                    post.getStatus(),
-                    post.getContent(),
-                    post.getUploader_id(),
-                    post.getCreated_at(),
-                    post.getPeriod(),
-                    post.getRegion());
+            PostDto postDto = PostDto.builder()
+                    .post_id(post.getPost_id())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .status(post.getStatus())
+                    .uploader_id(post.getUploader_id())
+                    .created_at(post.getCreated_at())
+                    .period(post.getPeriod())
+                    .region(post.getRegion())
+                    .images(imgService.findImgByPostId(post.getPost_id(), 0L))
+                    .build();
+
+
             postDtos.add(postDto);
         }
 
@@ -77,10 +91,19 @@ public class PostService {
             postDto.setUploader_id(post.getUploader_id());
             postDto.setCreated_at(post.getCreated_at());
             postDto.setStatus(post.getStatus());
+            postDto.setImages(imgService.findImgByPostId(post.getPost_id(), 0L));
 
         });
 
         return postDto;
 
+    }
+
+    public void deletePost(Long post_id) {
+        Optional<Post> postOptional = postRepository.findById(post_id);
+        if(postOptional.isPresent()) {
+            postRepository.deleteById(post_id);
+            imgService.deleteImg(post_id, 0L);
+        }
     }
 }
