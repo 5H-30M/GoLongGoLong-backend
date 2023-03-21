@@ -25,4 +25,9 @@ public class ImgS3Service {
         return getObject(fileName).toString();
     }
 
+    //TODO : S3에서 객체 삭제하는 코드 작성하기
+    public void delteFromS3() {
+
+    }
+
 }

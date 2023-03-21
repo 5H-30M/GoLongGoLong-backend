@@ -43,6 +43,17 @@ public class ImgService {
 
     }
 
+    public void deleteImg(Long post_id, Long post_type) {
+        List<Img> allImg = imgRepository.findAll();
+        for(Img img : allImg) {
+            if(img.getPost_id().equals(post_id) && img.getType().equals(post_type))
+            {
+                imgRepository.deleteById(img.getImg_id());
+                //TODO : S3에서 이미지 삭제하는 코드 구현하기
+            }
+        }
+    }
+
 
 
 
