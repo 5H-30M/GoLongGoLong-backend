@@ -1,5 +1,6 @@
 package hello.golong.domain.img.application;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +27,15 @@ public class ImgS3Service {
     }
 
     //TODO : S3에서 객체 삭제하는 코드 작성하기
-    public void delteFromS3() {
+    public void deleteFromS3(String file_name) {
+
+        try {
+            amazonS3.deleteObject(bucket, file_name);
+        } catch (AmazonServiceException e) {
+            System.err.println(e.getErrorMessage());
+            System.exit(1);
+        }
+
 
     }
 
