@@ -1,14 +1,17 @@
 package hello.golong.domain.post.dto;
 
+import hello.golong.domain.comment.dto.CommentDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class PostDto {
 
     private Long post_id;
@@ -26,4 +29,8 @@ public class PostDto {
     private Long period;
 
     private String region;
+
+    private List<String> images;
+
+    private List<CommentDto> comments;
 }
