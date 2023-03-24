@@ -1,5 +1,6 @@
 package hello.golong.domain.post.dto;
 
+import hello.golong.domain.comment.dto.CommentDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -30,4 +31,6 @@ public class PostDto {
     private String region;
 
     private List<String> images;
+
+    private List<CommentDto> comments;
 }
