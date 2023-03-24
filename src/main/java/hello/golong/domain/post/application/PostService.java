@@ -1,5 +1,6 @@
 package hello.golong.domain.post.application;
 
+import hello.golong.domain.comment.application.CommentService;
 import hello.golong.domain.img.application.ImgService;
 import hello.golong.domain.post.dao.PostRepository;
 import hello.golong.domain.post.domain.Post;
@@ -18,11 +19,13 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final ImgService imgService;
+    private final CommentService commentService;
 
     @Autowired
-    public PostService(PostRepository postRepository, ImgService imgService) {
+    public PostService(PostRepository postRepository, ImgService imgService, CommentService commentService) {
         this.postRepository = postRepository;
         this.imgService = imgService;
+        this.commentService = commentService;
     }
 
     public PostDto createPost(PostDto postDto) throws IOException {
@@ -91,7 +94,8 @@ public class PostService {
             postDto.setUploader_id(post.getUploader_id());
             postDto.setCreated_at(post.getCreated_at());
             postDto.setStatus(post.getStatus());
-            postDto.setImages(imgService.findImgByPostId(post.getPost_id(), 0L));
+            postDto.setImages(imgService.findImgByPostId(post_id, 0L));
+            postDto.setComments(commentService.findByPostId(post_id));
 
         });
 
@@ -104,6 +108,7 @@ public class PostService {
         if(postOptional.isPresent()) {
             postRepository.deleteById(post_id);
             imgService.deleteImg(post_id, 0L);
+            commentService.deleteByPostId(post_id);
         }
     }
 }
