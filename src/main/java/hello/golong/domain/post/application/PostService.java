@@ -33,8 +33,6 @@ public class PostService {
         postDto.setCreated_at(LocalDateTime.now());
         postDto.setStatus(0);
 
-        imgService.saveImg(postDto.getImages(), postDto.getPost_id(), 0L);
-
         Post post = Post.builder()
                 .title(postDto.getTitle())
                 .status(postDto.getStatus())
@@ -46,6 +44,9 @@ public class PostService {
 
         postRepository.save(post);
         postDto.setPost_id(post.getPost_id());
+
+        imgService.saveImg(postDto.getImages(), postDto.getPost_id(), 0L);
+
         return postDto;
 
     }
