@@ -18,13 +18,17 @@ public class ImgService {
 
     public List<String> findImgByPostId(Long post_id, Long post_type) {
 
+        List<Img> imgs = imgRepository.findByPostIdAndType(post_id, post_type);
         List<String> urls = new ArrayList<>();
-        //TODO : Repository 레벨로 코드 분류
-        List<Img> allImg = imgRepository.findAll();
-        for(Img img : allImg) {
-            if(img.getType().equals(post_type) && img.getPost_id().equals(post_id))
-                urls.add(img.getImg_url());
+
+        for(Img img : imgs) {
+            if(img.getIsThumbnail() == 1) {
+                urls.add(0, img.getImgUrl());
+            }
+            else
+                urls.add(img.getImgUrl());
         }
+
         return urls;
     }
 
@@ -32,11 +36,18 @@ public class ImgService {
     public void saveImg(List<String> file_names, Long post_id, Long post_type) throws IOException {
 
         for(String file_name : file_names) {
+
+            int is_thumbnail = 0;//대표 이미지 x
+
+            //대표 이미지인 경우
+            if(file_names.indexOf(file_name) == 0)
+                is_thumbnail = 1;
             Img img = Img.builder()
-                    .img_url(imgS3Service.download(file_name))
+                    .imgUrl(imgS3Service.download(file_name))
                     .type(post_type)
-                    .post_id(post_id)
-                    .file_name(file_name)
+                    .postId(post_id)
+                    .fileName(file_name)
+                    .isThumbnail(is_thumbnail)
                     .build();
             imgRepository.save(img);
         }
@@ -44,13 +55,11 @@ public class ImgService {
     }
 
     public void deleteImg(Long post_id, Long post_type) {
-        List<Img> allImg = imgRepository.findAll();
-        for(Img img : allImg) {
-            if(img.getPost_id().equals(post_id) && img.getType().equals(post_type))
-            {
-                imgRepository.deleteById(img.getImg_id());
-                //TODO : S3에서 이미지 삭제하는 코드 구현하기
-            }
+
+        List<Img> imgs = imgRepository.findByPostIdAndType(post_id, post_type);
+        for(Img img : imgs) {
+            imgS3Service.deleteFromS3(img.getFileName());
+            imgRepository.deleteById(img.getId());
         }
     }
 
