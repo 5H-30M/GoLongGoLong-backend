@@ -17,16 +17,21 @@ public class Img {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true) // nullable = false
-    private Long img_id;
+    @Column(unique = true, name = "img_id") // nullable = false
+    private Long id;
 
     private Long type;//모금게시글 사진(0), 모금후기 사진(1)
 
-    private Long post_id;//게시글 아이디
+    @Column(name = "post_id")
+    private Long postId;//게시글 아이디
 
-    @Column(length = 30)
-    private String file_name;//s3에 저장한 객체명
+    @Column(length = 30, name = "file_name")
+    private String fileName;//s3에 저장한 객체명
 
-    private String img_url;//s3 객체 url
+    @Column(name = "img_url")
+    private String imgUrl;//s3 객체 url
+
+    @Column(name = "is_thumbnail")
+    private int isThumbnail;
 
 }
