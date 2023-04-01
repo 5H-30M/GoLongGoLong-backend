@@ -56,7 +56,10 @@ public class ImgService {
 
     public void deleteImg(Long post_id, Long post_type) {
 
+        //TODO : 존재하지 않을 때 어떤 예외발생시키는지 확인하기
         List<Img> imgs = imgRepository.findByPostIdAndType(post_id, post_type);
+
+        //TODO : 예외발생을 시키지 않고 그냥 NULL 이라면 !imgs.isEmpty() 일때만 로직 수행하도록 코드 수정
         for(Img img : imgs) {
             imgS3Service.deleteFromS3(img.getFileName());
             imgRepository.deleteById(img.getId());
