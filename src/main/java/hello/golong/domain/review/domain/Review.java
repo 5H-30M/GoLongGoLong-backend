@@ -1,4 +1,4 @@
-package hello.golong.domain.comment.domain;
+package hello.golong.domain.review.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,29 +8,30 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
 @Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "comment")
-public class Comment {
+@Table(name = "review")
+public class Review {
 
-    @Id // pk
+    @Id //pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true, name = "comment_id") // nullable = false
+    @Column(unique = true, name = "review_id")
     private Long id;
 
-    @Column(name = "review_id")
+    @Column(name = "post_id")
     private Long postId;
 
     @Column(columnDefinition = "LONGTEXT")
     private String content;
 
-    @Column(name = "writer_id")
-    private Long writerId;
+    private Long amount;
+
+    @Column(name = "raised_people")
+    private Long raisedPeople;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
 }
