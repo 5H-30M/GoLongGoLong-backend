@@ -19,13 +19,11 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final ImgService imgService;
-    private final CommentService commentService;
 
     @Autowired
     public PostService(PostRepository postRepository, ImgService imgService, CommentService commentService) {
         this.postRepository = postRepository;
         this.imgService = imgService;
-        this.commentService = commentService;
     }
 
     public PostDto createPost(PostDto postDto) throws IOException {
@@ -66,7 +64,6 @@ public class PostService {
                     .uploader_id(post.getUploaderId())
                     .created_at(post.getCreatedAt())
                     .period(post.getPeriod())
-                    .comments(commentService.findByPostId(post.getId()))
                     .target_amount(post.getTargetAmount())
                     .region(post.getRegion())
                     .images(imgService.findImgByPostId(post.getId(), 0L))
@@ -100,7 +97,6 @@ public class PostService {
             postDto.setTarget_amount(post.getTargetAmount());
             postDto.setStatus(post.getStatus());
             postDto.setImages(imgService.findImgByPostId(post_id, 0L));
-            postDto.setComments(commentService.findByPostId(post_id));
 
         });
 
@@ -113,7 +109,6 @@ public class PostService {
         if(postOptional.isPresent()) {
             postRepository.deleteById(post_id);
             imgService.deleteImg(post_id, 0L);
-            commentService.deleteByPostId(post_id);
         }
     }
 }
