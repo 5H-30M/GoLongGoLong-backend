@@ -1,10 +1,10 @@
 package hello.golong.domain.post.application;
 
-import hello.golong.domain.comment.application.CommentService;
 import hello.golong.domain.img.application.ImgService;
 import hello.golong.domain.post.dao.PostRepository;
 import hello.golong.domain.post.domain.Post;
 import hello.golong.domain.post.dto.PostDto;
+import hello.golong.domain.review.application.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +19,13 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final ImgService imgService;
+    private final ReviewService reviewService;
 
     @Autowired
-    public PostService(PostRepository postRepository, ImgService imgService, CommentService commentService) {
+    public PostService(PostRepository postRepository, ImgService imgService, ReviewService reviewService) {
         this.postRepository = postRepository;
         this.imgService = imgService;
+        this.reviewService = reviewService;
     }
 
     public PostDto createPost(PostDto postDto) throws IOException {
@@ -109,6 +111,7 @@ public class PostService {
         if(postOptional.isPresent()) {
             postRepository.deleteById(post_id);
             imgService.deleteImg(post_id, 0L);
+            reviewService.deleteReview(reviewService.findReviewByPostId(post_id).getId());
         }
     }
 }
