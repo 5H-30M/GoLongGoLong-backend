@@ -57,6 +57,7 @@ public class CommentService {
         commentRepository.deleteById(comment_id);
     }
 
+    //TODO : 예외 발생 확인해서 수정하기
     public void deleteByReviewId(Long review_id) {
         commentRepository.deleteByReviewId(review_id);
     }
