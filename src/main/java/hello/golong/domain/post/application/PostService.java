@@ -19,6 +19,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final ImgService imgService;
+
     private final ReviewService reviewService;
 
     @Autowired

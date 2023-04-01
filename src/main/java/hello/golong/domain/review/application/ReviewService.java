@@ -2,7 +2,7 @@ package hello.golong.domain.review.application;
 
 import hello.golong.domain.comment.application.CommentService;
 import hello.golong.domain.img.application.ImgService;
-import hello.golong.domain.post.application.PostService;
+import hello.golong.domain.post.dao.PostRepository;
 import hello.golong.domain.review.dao.ReviewRepository;
 import hello.golong.domain.review.domain.Review;
 import hello.golong.domain.review.dto.ReviewDto;
@@ -23,21 +23,24 @@ public class ReviewService {
     private final ImgService imgService;
     private final CommentService commentService;
 
-    private final PostService postService;
+    private final PostRepository postRepository;
 
 
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository, ImgService imgService, CommentService commentService, PostService postService) {
+    public ReviewService(ReviewRepository reviewRepository, ImgService imgService, CommentService commentService, PostRepository postRepository) {
         this.reviewRepository = reviewRepository;
         this.imgService = imgService;
         this.commentService = commentService;
-        this.postService = postService;
+        this.postRepository = postRepository;
     }
 
     public ReviewDto createReview(ReviewDto reviewDto) throws IOException {
 
         reviewDto.setCreatedAt(LocalDateTime.now());
-        postService.updateStatus(reviewDto.getPostId(), 4);
+        //TODO: 이부분 다시 설계하기
+        postRepository.findById(reviewDto.getPostId()).ifPresent(post -> {
+            post.updateStatus(4);
+        });
 
         //TODO : donation entity 찾아서 인원수 및 모금액 부분 수정하기
         reviewDto.setRaisedPeople(0L);

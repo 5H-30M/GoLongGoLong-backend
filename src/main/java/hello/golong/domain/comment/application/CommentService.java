@@ -57,8 +57,8 @@ public class CommentService {
         commentRepository.deleteById(comment_id);
     }
 
-    public void deleteByReviewId(Long post_id) {
-        commentRepository.deleteByReviewId(post_id);
+    public void deleteByReviewId(Long review_id) {
+        commentRepository.deleteByReviewId(review_id);
     }
 
 }
