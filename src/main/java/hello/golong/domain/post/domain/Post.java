@@ -16,6 +16,10 @@ import java.time.LocalDateTime;
 @Table(name = "post")
 public class Post {
 
+    public void updateStatus(int status) {
+        this.status = status;
+    }
+
     @Id // pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, name = "post_id") // nullable = false
