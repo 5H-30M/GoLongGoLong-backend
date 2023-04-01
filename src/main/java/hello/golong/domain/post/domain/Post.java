@@ -18,8 +18,8 @@ public class Post {
 
     @Id // pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true) // nullable = false
-    private Long post_id;
+    @Column(unique = true, name = "post_id") // nullable = false
+    private Long id;
 
     @Column(length = 30)
     private String title;
@@ -29,13 +29,17 @@ public class Post {
     @Column(columnDefinition = "LONGTEXT")
     private String content;
 
-    private Long uploader_id;
+    @Column(name = "uploader_id")
+    private Long uploaderId;
 
-    private LocalDateTime created_at;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     private Long period;
 
     @Column(length = 30)
     private String region;
 
+    @Column(name = "target_amount")
+    private Long targetAmount;
 }
