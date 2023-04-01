@@ -18,19 +18,19 @@ public class Comment {
 
     @Id // pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true) // nullable = false
-    private Long comment_id;
+    @Column(unique = true, name = "comment_id") // nullable = false
+    private Long id;
 
-    @Column
-    private Long post_id;
+    @Column(name = "post_id")
+    private Long postId;
 
     @Column(columnDefinition = "LONGTEXT")
     private String content;
 
-    @Column
-    private Long writer_id;
+    @Column(name = "writer_id")
+    private Long writerId;
 
-    @Column
-    private LocalDateTime created_at;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
 }

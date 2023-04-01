@@ -22,21 +22,18 @@ public class CommentService {
     }
 
     public List<CommentDto> findByPostId(Long post_id) {
-        List<Comment> comments = commentRepository.findAll();
+        List<Comment> comments = commentRepository.findByPostId(post_id);
         List<CommentDto> commentDtos = new ArrayList<>();
         //TODO : Repository 레벨로 코드 분류
         for(Comment comment : comments) {
-            if(comment.getPost_id().equals(post_id))
-            {
                 CommentDto commentDto = CommentDto.builder()
-                        .comment_id(comment.getComment_id())
-                        .post_id(comment.getPost_id())
-                        .writer_id(comment.getWriter_id())
+                        .comment_id(comment.getId())
+                        .post_id(comment.getPostId())
+                        .writer_id(comment.getWriterId())
                         .content(comment.getContent())
-                        .created_at(comment.getCreated_at())
+                        .created_at(comment.getCreatedAt())
                         .build();
                 commentDtos.add(commentDto);
-            }
         }
         return commentDtos;
     }
@@ -45,34 +42,23 @@ public class CommentService {
 
         commentDto.setCreated_at(LocalDateTime.now());
         Comment comment = Comment.builder()
-                .post_id(commentDto.getPost_id())
-                .writer_id(commentDto.getWriter_id())
+                .postId(commentDto.getPost_id())
+                .writerId(commentDto.getWriter_id())
                 .content(commentDto.getContent())
-                .created_at(commentDto.getCreated_at())
+                .createdAt(commentDto.getCreated_at())
                 .build();
         commentRepository.save(comment);
 
-        commentDto.setComment_id(comment.getComment_id());
+        commentDto.setComment_id(comment.getId());
         return commentDto;
     }
 
     public void deleteComment(Long comment_id) {
-        Optional<Comment> commentOptional = commentRepository.findById(comment_id);
-        if(commentOptional.isPresent()) {
-            commentRepository.deleteById(comment_id);
-        }
-
-        //TODO : IllegalArgumentException 처리해주는게 나은지..optional처리로 충분한지
-        //TODO : Optional 예외처리 관련 수정하기
-
+        commentRepository.deleteById(comment_id);
     }
 
     public void deleteByPostId(Long post_id) {
-        List<Comment> comments = commentRepository.findAll();
-        for(Comment comment : comments) {
-            if(comment.getPost_id().equals(post_id))
-                commentRepository.delete(comment);
-        }
+        commentRepository.deleteByPostId(post_id);
     }
 
 }
