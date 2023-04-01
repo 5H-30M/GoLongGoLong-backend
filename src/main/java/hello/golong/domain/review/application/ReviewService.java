@@ -73,7 +73,7 @@ public class ReviewService {
                     .createdAt(review.getCreatedAt())
                     .images(imgService.findImgByPostId(review.getId(), 1L))
                     .receipt(imgService.findImgByPostId(review.getId(), 2L).get(0))
-                    .comments(commentService.findByPostId(review.getId()))
+                    .comments(commentService.findByReviewId(review.getId()))
                     .build();
 
             reviewDtos.add(reviewDto);
@@ -107,18 +107,18 @@ public class ReviewService {
             reviewDto.setCreatedAt(review.getCreatedAt());
             reviewDto.setImages(imgService.findImgByPostId(review.getId(), 1L));
             reviewDto.setReceipt(imgService.findImgByPostId(review.getId(), 2L).get(0));
-            reviewDto.setComments(commentService.findByPostId(review.getId()));
+            reviewDto.setComments(commentService.findByReviewId(review.getId()));
 
         });
         return reviewDto;
 
     }
 
-    public void deleteReview(Long id) {
+    public void deleteReview(Long review_id) {
 
-        reviewRepository.deleteById(id);
-        imgService.deleteImg(id, 1L);
-        commentService.deleteByPostId(id);
+        reviewRepository.deleteById(review_id);
+        imgService.deleteImg(review_id, 1L);
+        commentService.deleteByReviewId(review_id);
 
     }
 

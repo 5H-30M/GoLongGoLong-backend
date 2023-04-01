@@ -21,14 +21,14 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public List<CommentDto> findByPostId(Long post_id) {
-        List<Comment> comments = commentRepository.findByPostId(post_id);
+    public List<CommentDto> findByReviewId(Long review_id) {
+        List<Comment> comments = commentRepository.findByReviewId(review_id);
         List<CommentDto> commentDtos = new ArrayList<>();
         //TODO : Repository 레벨로 코드 분류
         for(Comment comment : comments) {
                 CommentDto commentDto = CommentDto.builder()
                         .comment_id(comment.getId())
-                        .post_id(comment.getPostId())
+                        .review_id(comment.getReviewId())
                         .writer_id(comment.getWriterId())
                         .content(comment.getContent())
                         .created_at(comment.getCreatedAt())
@@ -42,7 +42,7 @@ public class CommentService {
 
         commentDto.setCreated_at(LocalDateTime.now());
         Comment comment = Comment.builder()
-                .postId(commentDto.getPost_id())
+                .reviewId(commentDto.getReview_id())
                 .writerId(commentDto.getWriter_id())
                 .content(commentDto.getContent())
                 .createdAt(commentDto.getCreated_at())
@@ -57,8 +57,8 @@ public class CommentService {
         commentRepository.deleteById(comment_id);
     }
 
-    public void deleteByPostId(Long post_id) {
-        commentRepository.deleteByPostId(post_id);
+    public void deleteByReviewId(Long post_id) {
+        commentRepository.deleteByReviewId(post_id);
     }
 
 }
