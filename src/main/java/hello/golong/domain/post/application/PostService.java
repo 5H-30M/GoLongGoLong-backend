@@ -114,4 +114,11 @@ public class PostService {
             reviewService.deleteReview(reviewService.findReviewByPostId(post_id).getId());
         }
     }
+
+    public void updateStatus(Long post_id, int status) {
+        Optional<Post> postOptional = postRepository.findById(post_id);
+        postOptional.ifPresent(post -> {
+            post.updateStatus(status);
+        });
+    }
 }
