@@ -66,6 +66,7 @@ public class PostService {
                     .uploader_id(post.getUploaderId())
                     .created_at(post.getCreatedAt())
                     .period(post.getPeriod())
+                    .comments(commentService.findByPostId(post.getId()))
                     .target_amount(post.getTargetAmount())
                     .region(post.getRegion())
                     .images(imgService.findImgByPostId(post.getId(), 0L))
