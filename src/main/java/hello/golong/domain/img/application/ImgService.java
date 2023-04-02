@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,16 +19,20 @@ public class ImgService {
 
     public List<String> findImgByPostId(Long post_id, Long post_type) {
 
-        List<Img> imgs = imgRepository.findByPostIdAndType(post_id, post_type);
+        Optional<List<Img>> optionalImgs = imgRepository.findByPostIdAndType(post_id, post_type);
         List<String> urls = new ArrayList<>();
 
-        for(Img img : imgs) {
-            if(img.getIsThumbnail() == 1) {
-                urls.add(0, img.getImgUrl());
+        optionalImgs.ifPresent( imgs -> {
+
+            for(Img img : imgs) {
+                if(img.getIsThumbnail() == 1) {
+                    urls.add(0, img.getImgUrl());
+                }
+                else
+                    urls.add(img.getImgUrl());
             }
-            else
-                urls.add(img.getImgUrl());
-        }
+
+        });
 
         return urls;
     }
@@ -56,14 +61,16 @@ public class ImgService {
 
     public void deleteImg(Long post_id, Long post_type) {
 
-        //TODO : 존재하지 않을 때 어떤 예외발생시키는지 확인하기
-        List<Img> imgs = imgRepository.findByPostIdAndType(post_id, post_type);
+        Optional<List<Img>> optionalImgs = imgRepository.findByPostIdAndType(post_id, post_type);
+        optionalImgs.ifPresent( imgs -> {
 
-        //TODO : 예외발생을 시키지 않고 그냥 NULL 이라면 !imgs.isEmpty() 일때만 로직 수행하도록 코드 수정
-        for(Img img : imgs) {
-            imgS3Service.deleteFromS3(img.getFileName());
-            imgRepository.deleteById(img.getId());
-        }
+            for(Img img : imgs) {
+                imgS3Service.deleteFromS3(img.getFileName());
+                imgRepository.deleteById(img.getId());
+            }
+
+        });
+
     }
 
 
