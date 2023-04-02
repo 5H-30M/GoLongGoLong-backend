@@ -19,6 +19,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final ImgService imgService;
+
     private final ReviewService reviewService;
 
     @Autowired
@@ -111,7 +112,17 @@ public class PostService {
         if(postOptional.isPresent()) {
             postRepository.deleteById(post_id);
             imgService.deleteImg(post_id, 0L);
-            reviewService.deleteReview(reviewService.findReviewByPostId(post_id).getId());
+            if(postOptional.get().getStatus() == 4) {
+                reviewService.deleteReview(reviewService.findReviewByPostId(post_id).getId());
+            }
+
         }
+    }
+
+    public void updateStatus(Long post_id, int status) {
+        Optional<Post> postOptional = postRepository.findById(post_id);
+        postOptional.ifPresent(post -> {
+            post.updateStatus(status);
+        });
     }
 }

@@ -22,7 +22,7 @@ public class Comment {
     private Long id;
 
     @Column(name = "review_id")
-    private Long postId;
+    private Long reviewId;
 
     @Column(columnDefinition = "LONGTEXT")
     private String content;

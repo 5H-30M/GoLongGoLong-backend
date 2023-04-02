@@ -2,6 +2,7 @@ package hello.golong.domain.review.application;
 
 import hello.golong.domain.comment.application.CommentService;
 import hello.golong.domain.img.application.ImgService;
+import hello.golong.domain.post.dao.PostRepository;
 import hello.golong.domain.review.dao.ReviewRepository;
 import hello.golong.domain.review.domain.Review;
 import hello.golong.domain.review.dto.ReviewDto;
@@ -22,19 +23,25 @@ public class ReviewService {
     private final ImgService imgService;
     private final CommentService commentService;
 
+    private final PostRepository postRepository;
+
 
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository, ImgService imgService, CommentService commentService) {
+    public ReviewService(ReviewRepository reviewRepository, ImgService imgService, CommentService commentService, PostRepository postRepository) {
         this.reviewRepository = reviewRepository;
         this.imgService = imgService;
         this.commentService = commentService;
+        this.postRepository = postRepository;
     }
 
     public ReviewDto createReview(ReviewDto reviewDto) throws IOException {
 
         reviewDto.setCreatedAt(LocalDateTime.now());
+        //TODO: 이부분 다시 설계하기
+        postRepository.findById(reviewDto.getPostId()).ifPresent(post -> {
+            post.updateStatus(4);
+        });
 
-        //TODO : post 엔티티 찾아서 status 수정하기
         //TODO : donation entity 찾아서 인원수 및 모금액 부분 수정하기
         reviewDto.setRaisedPeople(0L);
         reviewDto.setAmount(0L);
@@ -73,7 +80,7 @@ public class ReviewService {
                     .createdAt(review.getCreatedAt())
                     .images(imgService.findImgByPostId(review.getId(), 1L))
                     .receipt(imgService.findImgByPostId(review.getId(), 2L).get(0))
-                    .comments(commentService.findByPostId(review.getId()))
+                    .comments(commentService.findByReviewId(review.getId()))
                     .build();
 
             reviewDtos.add(reviewDto);
@@ -107,18 +114,18 @@ public class ReviewService {
             reviewDto.setCreatedAt(review.getCreatedAt());
             reviewDto.setImages(imgService.findImgByPostId(review.getId(), 1L));
             reviewDto.setReceipt(imgService.findImgByPostId(review.getId(), 2L).get(0));
-            reviewDto.setComments(commentService.findByPostId(review.getId()));
+            reviewDto.setComments(commentService.findByReviewId(review.getId()));
 
         });
         return reviewDto;
 
     }
 
-    public void deleteReview(Long id) {
+    public void deleteReview(Long review_id) {
 
-        reviewRepository.deleteById(id);
-        imgService.deleteImg(id, 1L);
-        commentService.deleteByPostId(id);
+        reviewRepository.deleteById(review_id);
+        imgService.deleteImg(review_id, 1L);
+        commentService.deleteByReviewId(review_id);
 
     }
 
