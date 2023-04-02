@@ -37,7 +37,7 @@ public class ReviewService {
     public ReviewDto createReview(ReviewDto reviewDto) throws IOException {
 
         reviewDto.setCreatedAt(LocalDateTime.now());
-        //TODO: 이부분 다시 설계하기
+        //TODO: repository 를 다른 서비스 도메인에서 직접 접근한다??? 안좋지 않을까...이부분 다시 설계하기
         postRepository.findById(reviewDto.getPostId()).ifPresent(post -> {
             post.updateStatus(4);
         });
@@ -123,7 +123,10 @@ public class ReviewService {
 
     public void deleteReview(Long review_id) {
 
-        reviewRepository.deleteById(review_id);
+        Optional<Review> optionalReview = reviewRepository.findById(review_id);
+        optionalReview.ifPresent(review -> {
+            reviewRepository.deleteById(review_id);
+        });
         imgService.deleteImg(review_id, 1L);
         commentService.deleteByReviewId(review_id);
 

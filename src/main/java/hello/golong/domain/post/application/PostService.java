@@ -112,7 +112,7 @@ public class PostService {
         if(postOptional.isPresent()) {
             postRepository.deleteById(post_id);
             imgService.deleteImg(post_id, 0L);
-            if(postOptional.get().getStatus() == 4) {
+            if(postOptional.get().getStatus() >= 4) {
                 reviewService.deleteReview(reviewService.findReviewByPostId(post_id).getId());
             }
 
