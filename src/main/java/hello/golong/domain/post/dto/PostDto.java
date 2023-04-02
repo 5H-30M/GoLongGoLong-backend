@@ -32,5 +32,5 @@ public class PostDto {
 
     private List<String> images;
 
-    private List<CommentDto> comments;
+    private Long target_amount;
 }
