@@ -1,10 +1,10 @@
 package hello.golong.domain.post.application;
 
-import hello.golong.domain.comment.application.CommentService;
 import hello.golong.domain.img.application.ImgService;
 import hello.golong.domain.post.dao.PostRepository;
 import hello.golong.domain.post.domain.Post;
 import hello.golong.domain.post.dto.PostDto;
+import hello.golong.domain.review.application.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +19,14 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final ImgService imgService;
-    private final CommentService commentService;
+
+    private final ReviewService reviewService;
 
     @Autowired
-    public PostService(PostRepository postRepository, ImgService imgService, CommentService commentService) {
+    public PostService(PostRepository postRepository, ImgService imgService, ReviewService reviewService) {
         this.postRepository = postRepository;
         this.imgService = imgService;
-        this.commentService = commentService;
+        this.reviewService = reviewService;
     }
 
     public PostDto createPost(PostDto postDto) throws IOException {
@@ -66,7 +67,6 @@ public class PostService {
                     .uploader_id(post.getUploaderId())
                     .created_at(post.getCreatedAt())
                     .period(post.getPeriod())
-                    .comments(commentService.findByPostId(post.getId()))
                     .target_amount(post.getTargetAmount())
                     .region(post.getRegion())
                     .images(imgService.findImgByPostId(post.getId(), 0L))
@@ -100,7 +100,6 @@ public class PostService {
             postDto.setTarget_amount(post.getTargetAmount());
             postDto.setStatus(post.getStatus());
             postDto.setImages(imgService.findImgByPostId(post_id, 0L));
-            postDto.setComments(commentService.findByPostId(post_id));
 
         });
 
@@ -113,7 +112,17 @@ public class PostService {
         if(postOptional.isPresent()) {
             postRepository.deleteById(post_id);
             imgService.deleteImg(post_id, 0L);
-            commentService.deleteByPostId(post_id);
+            if(postOptional.get().getStatus() == 4) {
+                reviewService.deleteReview(reviewService.findReviewByPostId(post_id).getId());
+            }
+
         }
+    }
+
+    public void updateStatus(Long post_id, int status) {
+        Optional<Post> postOptional = postRepository.findById(post_id);
+        postOptional.ifPresent(post -> {
+            post.updateStatus(status);
+        });
     }
 }
