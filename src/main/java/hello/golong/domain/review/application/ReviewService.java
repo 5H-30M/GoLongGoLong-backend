@@ -126,9 +126,10 @@ public class ReviewService {
         Optional<Review> optionalReview = reviewRepository.findById(review_id);
         optionalReview.ifPresent(review -> {
             reviewRepository.deleteById(review_id);
+            imgService.deleteImg(review_id, 1L);
+            commentService.deleteByReviewId(review_id);
         });
-        imgService.deleteImg(review_id, 1L);
-        commentService.deleteByReviewId(review_id);
+
 
     }
 
