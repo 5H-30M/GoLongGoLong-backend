@@ -22,10 +22,11 @@ public class CommentService {
     }
 
     public List<CommentDto> findByReviewId(Long review_id) {
-        List<Comment> comments = commentRepository.findByReviewId(review_id);
+        Optional<List<Comment>> optionalComments = commentRepository.findByReviewId(review_id);
         List<CommentDto> commentDtos = new ArrayList<>();
-        //TODO : Repository 레벨로 코드 분류
-        for(Comment comment : comments) {
+        optionalComments.ifPresent(comments -> {
+
+            for(Comment comment : comments) {
                 CommentDto commentDto = CommentDto.builder()
                         .comment_id(comment.getId())
                         .review_id(comment.getReviewId())
@@ -34,7 +35,11 @@ public class CommentService {
                         .created_at(comment.getCreatedAt())
                         .build();
                 commentDtos.add(commentDto);
-        }
+            }
+
+        });
+
+
         return commentDtos;
     }
 
@@ -54,12 +59,18 @@ public class CommentService {
     }
 
     public void deleteComment(Long comment_id) {
-        commentRepository.deleteById(comment_id);
-    }
+        Optional<Comment> optionalComment = commentRepository.findById(comment_id);
+        optionalComment.ifPresent(comment -> {
+            commentRepository.deleteById(comment_id);
+        });
 
-    //TODO : 예외 발생 확인해서 수정하기
+    }
     public void deleteByReviewId(Long review_id) {
-        commentRepository.deleteByReviewId(review_id);
+        Optional<List<Comment>> optionalComments = commentRepository.findByReviewId(review_id);
+        optionalComments.ifPresent(comments -> {
+            commentRepository.deleteByReviewId(review_id);
+        });
+
     }
 
 }
