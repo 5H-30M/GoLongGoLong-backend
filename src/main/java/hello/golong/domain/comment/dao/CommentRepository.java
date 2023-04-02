@@ -6,10 +6,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findByReviewId(Long review_id);
+    Optional<List<Comment>> findByReviewId(Long review_id);
     @Transactional
     void deleteByReviewId(Long review_id);
 }
