@@ -125,4 +125,15 @@ public class PostService {
             post.updateStatus(status);
         });
     }
+
+    public void updatePost(Long post_id, PostDto postDto) {
+
+        Optional<Post> postOptional = postRepository.findById(post_id);
+        //TODO : img 수정 코드 추가하기
+        postOptional.ifPresent(post -> {
+            post.updateTitle(postDto.getTitle());
+            post.updateContent(postDto.getContent());
+        });
+
+    }
 }

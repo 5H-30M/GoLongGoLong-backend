@@ -73,6 +73,20 @@ public class ImgService {
 
     }
 
+    public void updateImg(List<String> file_names, Long post_id, Long post_type) {
+        //TODO : s3 에서 이전 이미지 삭제
+        //TODO : 여기서 부터 다시
+        Optional<List<Img>> optionalImgs = imgRepository.findByPostIdAndType(post_id, post_type);
+        optionalImgs.ifPresent( imgs -> {
+
+            for(Img img : imgs) {
+                imgS3Service.deleteFromS3(img.getFileName());
+
+            }
+
+        });
+    }
+
 
 
 
