@@ -16,6 +16,10 @@ import java.time.LocalDateTime;
 @Table(name = "comment")
 public class Comment {
 
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
     @Id // pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, name = "comment_id") // nullable = false
