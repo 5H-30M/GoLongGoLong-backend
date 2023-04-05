@@ -15,6 +15,11 @@ import javax.persistence.*;
 @Table(name = "img")
 public class Img {
 
+    public void updateImg(String fileName, String imgUrl) {
+        this.fileName = fileName;
+        this.imgUrl = imgUrl;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, name = "img_id") // nullable = false
