@@ -138,8 +138,12 @@ public class ReviewService {
         Optional<Review> optionalReview = reviewRepository.findById(review_id);
         optionalReview.ifPresent(review -> {
             review.updateContent(reviewDto.getContent());
-            imgService.updateImg(reviewDto.getImages(), review_id, 1L);
-            imgService.updateImg(Arrays.asList(reviewDto.getReceipt()), review_id, 2L);
+            try {
+                imgService.updateImg(reviewDto.getImages(), review_id, 1L);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            imgService.updateReceipt(reviewDto.getReceipt(), review_id, 2L);
         });
 
     }
