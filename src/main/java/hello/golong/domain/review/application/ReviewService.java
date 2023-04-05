@@ -137,13 +137,20 @@ public class ReviewService {
     public void updateReview(Long review_id, ReviewDto reviewDto) {
         Optional<Review> optionalReview = reviewRepository.findById(review_id);
         optionalReview.ifPresent(review -> {
-            review.updateContent(reviewDto.getContent());
-            try {
-                imgService.updateImg(reviewDto.getImages(), review_id, 1L);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            if(reviewDto.getContent() != null) review.updateContent(reviewDto.getContent());
+            if(reviewDto.getImages() != null)
+            {
+                try {
+                    imgService.updateImg(reviewDto.getImages(), review_id, 1L);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
             }
-            imgService.updateReceipt(reviewDto.getReceipt(), review_id, 2L);
+            if(reviewDto.getReceipt() != null)
+                imgService.updateReceipt(reviewDto.getReceipt(), review_id, 2L);
+
+
         });
 
     }
