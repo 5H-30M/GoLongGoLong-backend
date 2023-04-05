@@ -74,13 +74,29 @@ public class ImgService {
     }
 
     public void updateImg(List<String> file_names, Long post_id, Long post_type) {
-        //TODO : s3 에서 이전 이미지 삭제
-        //TODO : 여기서 부터 다시
         Optional<List<Img>> optionalImgs = imgRepository.findByPostIdAndType(post_id, post_type);
         optionalImgs.ifPresent( imgs -> {
 
+            int i = 1;
+
             for(Img img : imgs) {
+
+                //s3에서 기존 이미지 삭제
                 imgS3Service.deleteFromS3(img.getFileName());
+
+                String file_name;
+
+                //대표 이미지일 경우
+                if(img.getIsThumbnail() == 1) file_name = file_names.get(0);
+
+                //대표이미지가 아닐 경우
+                else file_name = file_names.get(i++);
+
+                try {
+                    img.updateImg(file_name, imgS3Service.download(file_name));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
 
             }
 

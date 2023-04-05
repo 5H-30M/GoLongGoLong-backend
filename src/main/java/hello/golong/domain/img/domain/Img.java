@@ -15,9 +15,7 @@ import javax.persistence.*;
 @Table(name = "img")
 public class Img {
 
-    public void updateImg(Long postId, Long type, String fileName, String imgUrl) {
-        this.postId = postId;
-        this.type = type;
+    public void updateImg(String fileName, String imgUrl) {
         this.fileName = fileName;
         this.imgUrl = imgUrl;
     }
