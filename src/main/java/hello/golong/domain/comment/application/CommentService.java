@@ -89,7 +89,7 @@ public class CommentService {
     public void updateComment(Long comment_id, CommentDto commentDto) {
         Optional<Comment> optionalComment = commentRepository.findById(comment_id);
         optionalComment.ifPresent(comment -> {
-            comment.updateContent(commentDto.getContent());
+            if(commentDto.getContent() != null) comment.updateContent(commentDto.getContent());
         });
     }
 
