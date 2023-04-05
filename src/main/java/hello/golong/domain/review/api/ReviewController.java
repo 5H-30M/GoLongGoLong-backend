@@ -44,5 +44,12 @@ public class ReviewController {
 
     //TODO: 모금 후기 삭제 방식 결정해서 메소드 추가하기
 
+    @PatchMapping("/{review_id}")
+    public ResponseEntity<ReviewDto> updateReview(@PathVariable("review_id") Long review_id, @RequestBody ReviewDto reviewDto) {
+        reviewService.updateReview(review_id, reviewDto);
+        //TODO: findReview 호출 없이 동작하도록 수정하기
+        return ResponseEntity.ok().body(reviewService.findReview(review_id));
+    }
+
 
 }

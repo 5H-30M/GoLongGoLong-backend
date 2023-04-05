@@ -39,11 +39,11 @@ public class PostController {
         return ResponseEntity.ok().body(postDto);
     }
 
-    @PostMapping("/{post_id}")
+    @PatchMapping("/{post_id}")
     public ResponseEntity<PostDto> updatePost(@PathVariable("post_id") Long post_id, @RequestBody PostDto postDto) {
         postService.updatePost(post_id, postDto);
-        return ResponseEntity.ok().body(postDto);
-
+        //TODO: findPost 값 호출 없이 동작하도록 수정하기
+        return ResponseEntity.ok().body(postService.findPost(post_id));
     }
 
     @DeleteMapping("/{post_id}")
