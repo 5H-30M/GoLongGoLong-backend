@@ -44,7 +44,7 @@ public class ImgService {
 
             int is_thumbnail = 0;//대표 이미지 x
 
-            //대표 이미지인 경우
+            //대표 이미지인 경우 + 영수증인 경우 항상 is_thumbnail = 1
             if(file_names.indexOf(file_name) == 0)
                 is_thumbnail = 1;
             Img img = Img.builder()

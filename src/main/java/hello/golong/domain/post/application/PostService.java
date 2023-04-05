@@ -129,8 +129,8 @@ public class PostService {
     public void updatePost(Long post_id, PostDto postDto) {
 
         Optional<Post> postOptional = postRepository.findById(post_id);
-        imgService.updateImg(postDto.getImages(), post_id, 0L);
         postOptional.ifPresent(post -> {
+            imgService.updateImg(postDto.getImages(), post_id, 0L);
             post.updateTitle(postDto.getTitle());
             post.updateContent(postDto.getContent());
         });

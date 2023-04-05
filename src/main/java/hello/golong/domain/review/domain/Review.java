@@ -16,6 +16,11 @@ import java.time.LocalDateTime;
 @Table(name = "review")
 public class Review {
 
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
+
     @Id //pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, name = "review_id")

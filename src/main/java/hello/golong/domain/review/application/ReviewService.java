@@ -134,8 +134,13 @@ public class ReviewService {
     }
 
 
+    public void updateReview(Long review_id, ReviewDto reviewDto) {
+        Optional<Review> optionalReview = reviewRepository.findById(review_id);
+        optionalReview.ifPresent(review -> {
+            review.updateContent(reviewDto.getContent());
+            imgService.updateImg(reviewDto.getImages(), review_id, 1L);
+            imgService.updateImg(Arrays.asList(reviewDto.getReceipt()), review_id, 2L);
+        });
 
-
-
-
+    }
 }
