@@ -112,7 +112,7 @@ public class PostService {
         if(postOptional.isPresent()) {
             postRepository.deleteById(post_id);
             imgService.deleteImg(post_id, 0L);
-            if(postOptional.get().getStatus() == 4) {
+            if(postOptional.get().getStatus() >= 4) {
                 reviewService.deleteReview(reviewService.findReviewByPostId(post_id).getId());
             }
 
@@ -124,5 +124,16 @@ public class PostService {
         postOptional.ifPresent(post -> {
             post.updateStatus(status);
         });
+    }
+
+    public void updatePost(Long post_id, PostDto postDto) {
+
+        Optional<Post> postOptional = postRepository.findById(post_id);
+        postOptional.ifPresent(post -> {
+            imgService.updateImg(postDto.getImages(), post_id, 0L);
+            post.updateTitle(postDto.getTitle());
+            post.updateContent(postDto.getContent());
+        });
+
     }
 }
