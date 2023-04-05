@@ -5,6 +5,7 @@ import hello.golong.domain.post.dao.PostRepository;
 import hello.golong.domain.post.domain.Post;
 import hello.golong.domain.post.dto.PostDto;
 import hello.golong.domain.review.application.ReviewService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class PostService {
 
@@ -130,9 +132,18 @@ public class PostService {
 
         Optional<Post> postOptional = postRepository.findById(post_id);
         postOptional.ifPresent(post -> {
-            imgService.updateImg(postDto.getImages(), post_id, 0L);
-            post.updateTitle(postDto.getTitle());
-            post.updateContent(postDto.getContent());
+            if(postDto.getImages() != null)
+            {
+                try {
+                    imgService.updateImg(postDto.getImages(), post_id, 0L);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                log.info("updateImg = {}", postDto.getImages().toString());
+            }
+
+            if(postDto.getTitle() != null) post.updateTitle(postDto.getTitle());
+            if(postDto.getContent() != null) post.updateContent(postDto.getContent());
         });
 
     }
