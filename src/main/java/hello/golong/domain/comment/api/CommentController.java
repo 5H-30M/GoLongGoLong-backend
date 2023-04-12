@@ -1,5 +1,6 @@
 package hello.golong.domain.comment.api;
 
+import com.amazonaws.Response;
 import hello.golong.domain.comment.application.CommentService;
 import hello.golong.domain.comment.dto.CommentDto;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,13 @@ public class CommentController {
 
         //TODO : 예외처리는 여기서 해주는 수 밖에 없는지??
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{comment_id}")
+    public ResponseEntity<CommentDto> updateComment(@PathVariable("comment_id") Long comment_id,
+                                                    @RequestBody CommentDto commentDto) {
+        commentService.updateComment(comment_id, commentDto);
+        return ResponseEntity.ok().body(commentService.findComment(comment_id));
     }
 
 }

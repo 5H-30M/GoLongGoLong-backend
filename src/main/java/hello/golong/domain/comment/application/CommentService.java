@@ -72,5 +72,25 @@ public class CommentService {
         });
 
     }
+    public CommentDto findComment(Long comment_id) {
+        Optional<Comment> optionalComment = commentRepository.findById(comment_id);
+        CommentDto commentDto = new CommentDto();
+        optionalComment.ifPresent(comment -> {
+            commentDto.setComment_id(comment_id);
+            commentDto.setContent(comment.getContent());
+            commentDto.setCreated_at(comment.getCreatedAt());
+            commentDto.setReview_id(comment.getReviewId());
+            commentDto.setWriter_id(comment.getWriterId());
+
+        });
+        return commentDto;
+    }
+
+    public void updateComment(Long comment_id, CommentDto commentDto) {
+        Optional<Comment> optionalComment = commentRepository.findById(comment_id);
+        optionalComment.ifPresent(comment -> {
+            if(commentDto.getContent() != null) comment.updateContent(commentDto.getContent());
+        });
+    }
 
 }
