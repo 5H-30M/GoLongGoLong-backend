@@ -1,3 +1,4 @@
+/*
 package hello.golong.domain.donation.application;
 
 import org.springframework.stereotype.Service;
@@ -6,4 +7,4 @@ import org.springframework.stereotype.Service;
 public class DonationService {
 
 
-}
+}*/

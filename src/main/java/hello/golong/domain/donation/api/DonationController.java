@@ -1,3 +1,4 @@
+/*
 package hello.golong.domain.donation.api;
 
 import hello.golong.domain.donation.application.DonationService;
@@ -20,4 +21,4 @@ public class DonationController {
     //TODO : 결제 모듈 구현하고 수정하기
 
 
-}
+}*/
