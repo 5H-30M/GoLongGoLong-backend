@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -30,7 +31,13 @@ public class PostDto {
 
     private String region;
 
+    private Long target_amount;
+
+    private Long raised_people;
+
+    private Long amount;
+
     private List<String> images;
 
-    private Long target_amount;
+    private Map<String, Long> plans;
 }
