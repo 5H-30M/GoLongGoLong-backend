@@ -30,7 +30,7 @@ public class Img {
     @Column(name = "post_id")
     private Long postId;//게시글 아이디
 
-    @Column(length = 30, name = "file_name")
+    @Column(length = 100, name = "file_name")
     private String fileName;//s3에 저장한 객체명
 
     @Column(name = "img_url")
