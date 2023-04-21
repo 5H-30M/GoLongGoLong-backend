@@ -44,7 +44,7 @@ public class ImgService {
 
             int is_thumbnail = 0;//대표 이미지 x
 
-            //대표 이미지인 경우
+            //대표 이미지인 경우 + 영수증인 경우 항상 is_thumbnail = 1
             if(file_names.indexOf(file_name) == 0)
                 is_thumbnail = 1;
             Img img = Img.builder()
@@ -71,6 +71,25 @@ public class ImgService {
 
         });
 
+    }
+
+    public void updateReceipt(String file_name, Long post_id, Long post_type) {
+        Optional<List<Img>> optionalImgs = imgRepository.findByPostIdAndType(post_id, post_type);
+        optionalImgs.ifPresent( imgs -> {
+            Img img = imgs.get(0);
+            //s3에서 기존 이미지 삭제
+            imgS3Service.deleteFromS3(img.getFileName());
+            try {
+                img.updateImg(file_name, imgS3Service.download(file_name));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+    }
+    public void updateImg(List<String> file_names, Long post_id, Long post_type) throws IOException {
+        this.deleteImg(post_id, post_type);
+        this.saveImg(file_names, post_id, post_type);
     }
 
 

@@ -20,6 +20,20 @@ public class Post {
         this.status = status;
     }
 
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
+    //해당 게시글의 모금 정보 업데이트
+    //TODO : 기부 스마트 컨트랙트 성공시 Post 기부 정보 업데이트하기
+    public void updateDonationInformation(Long new_amount) {
+        this.amount += new_amount;
+        this.raisedPeople++;
+    }
+
     @Id // pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, name = "post_id") // nullable = false
@@ -46,4 +60,9 @@ public class Post {
 
     @Column(name = "target_amount")
     private Long targetAmount;
+
+    @Column(name = "raised_people")
+    private Long raisedPeople;
+
+    private Long amount;
 }
