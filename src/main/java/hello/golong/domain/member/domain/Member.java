@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class Member {
 
     //TODO : 소셜로그인 관련해서 저장해야할 칼럼 수정하기
+    //TODO : UPDATE 가능한 항목 함수 만들기
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +27,15 @@ public class Member {
     @Column(name = "golongs")
     private Long golongs;
 
+    @Column(name = "wallet_url")
+    private String walletUrl;
+
+    //TODO : 개인키 암호화 여부 결정하기
+    @Column(name = "private_key")
+    private String privateKey;
+
+    //TODO : boolean isXXX 로 써서 문제 발생하는지 다시 점검하기
+    //TODO : boolean 사용하는 부분 어디있는지 점검하기
     @Column(name = "is_verified")
     private boolean isVerified;
 
