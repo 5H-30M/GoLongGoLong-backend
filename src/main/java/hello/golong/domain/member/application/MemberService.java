@@ -35,27 +35,48 @@ public class MemberService {
         return postService.findPostByUploaderId(uploader_id);
     }
 
-    /*public MemberDto createMember(MemberDto memberDto) {
+
+    public MemberDto updateMember(MemberDto memberDto) {
+        Member member = memberRepository.findById(memberDto.getId())
+                .orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        if(memberDto.getName() != null) member.updateName(memberDto.getName());
+        if(memberDto.getGOLtokens() != null) member.updateGOLtokens(memberDto.getGOLtokens());
+        if(memberDto.getIsVerified() != null) member.updateIsVerified(memberDto.getIsVerified());
+        if(memberDto.getProfileImgUrl() != null) member.updateProfileImgUrl(memberDto.getProfileImgUrl());
+
+        return getMemberDto(member);
+    }
+
+    public void deleteMember(Long id) {
+        Optional<Member> memberOptional = memberRepository.findById(id);
+        memberOptional.ifPresent(member -> {
+            memberRepository.deleteById(id);
+        });
+
+
+    }
+
+    //TODO : 회원 기부내역 조회
+/*  public List<PostDto> findDonatedPost(Long id) {
+
+    }
+
+    //TODO : 새로운 회원 추가
+    public MemberDto createMember(MemberDto memberDto) {
 
         return memberDto;
     }
-
-    public MemberDto updateMember(MemberDto memberDto) {
-
-    }
-*/
-/*    public List<PostDto> findDonatedPost(Long id) {
-
-    }*/
+ */
 
     public MemberDto getMemberDto(Member member) {
-        MemberDto memberDto = MemberDto.builder()
+        return MemberDto.builder()
                 .id(member.getId())
                 .name(member.getName())
-                .golongs(member.getGolongs())
+                .GOLtokens(member.getGOLtokens())
                 .walletUrl(member.getWalletUrl())
                 .privateKey(member.getPrivateKey())
-                .isVerified(member.isVerified())
+                .isVerified(member.getIsVerified())
                 .createdAt(member.getCreatedAt())
                 .profileImgUrl(member.getProfileImgUrl())
                 .snsEmail(member.getSnsEmail())
@@ -64,8 +85,6 @@ public class MemberService {
                 .accessToken(member.getAccessToken())
                 .postsByMember(postService.findPostByUploaderId(member.getId()))
                 .build();
-
-        return memberDto;
 
     }
 

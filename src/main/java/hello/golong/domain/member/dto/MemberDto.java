@@ -19,13 +19,13 @@ public class MemberDto {
 
     private String name;
 
-    private Long golongs;
+    private Long GOLtokens;
 
     private String walletUrl;
 
     private String privateKey;
 
-    private boolean isVerified;
+    private Boolean isVerified;
 
     private LocalDateTime createdAt;
 

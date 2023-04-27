@@ -16,6 +16,22 @@ public class Member {
     //TODO : 소셜로그인 관련해서 저장해야할 칼럼 수정하기
     //TODO : UPDATE 가능한 항목 함수 만들기
 
+    public void updateName(String name) {
+        this.name = name;
+    }
+
+    public void updateGOLtokens(Long GOLtokens) {
+        this.GOLtokens = GOLtokens;
+    }
+
+    public void updateIsVerified(Boolean isVerified) {
+        this.isVerified = isVerified;
+    }
+
+    public void updateProfileImgUrl(String profileImgUrl) {
+        this.profileImgUrl = profileImgUrl;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, name = "member_id")
@@ -24,8 +40,8 @@ public class Member {
     @Column(name = "member_name")
     private String name;
 
-    @Column(name = "golongs")
-    private Long golongs;
+    @Column(name = "GOLtokens")
+    private Long GOLtokens;
 
     @Column(name = "wallet_url")
     private String walletUrl;
@@ -34,10 +50,8 @@ public class Member {
     @Column(name = "private_key")
     private String privateKey;
 
-    //TODO : boolean isXXX 로 써서 문제 발생하는지 다시 점검하기
-    //TODO : boolean 사용하는 부분 어디있는지 점검하기
     @Column(name = "is_verified")
-    private boolean isVerified;
+    private Boolean isVerified;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
