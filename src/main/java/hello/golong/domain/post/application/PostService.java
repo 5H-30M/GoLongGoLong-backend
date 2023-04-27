@@ -87,6 +87,17 @@ public class PostService {
         return postDto;
 
     }
+    public List<PostDto> findPostByUploaderId(Long uploaderId) {
+
+        Optional<List<Post>> postOptional = postRepository.findByUploaderId(uploaderId);
+        List<PostDto> postDtos = new ArrayList<>();
+        postOptional.ifPresent(posts -> {
+            for(Post post : posts) {
+                postDtos.add(this.getPostDto(post));
+            }
+        });
+        return postDtos;
+    }
 
     public PostDto getPostDto(Post post) {
 
