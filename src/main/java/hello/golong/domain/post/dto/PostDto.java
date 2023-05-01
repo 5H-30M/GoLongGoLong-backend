@@ -1,6 +1,5 @@
 package hello.golong.domain.post.dto;
 
-import hello.golong.domain.comment.dto.CommentDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -40,4 +39,10 @@ public class PostDto {
     private List<String> images;
 
     private Map<String, Long> plans;
+
+    private String privateKey;
+
+    private String walletUrl;
+
+    private String transactionId;
 }

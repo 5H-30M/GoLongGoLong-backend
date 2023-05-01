@@ -65,4 +65,15 @@ public class Post {
     private Long raisedPeople;
 
     private Long amount;
+
+    @Column(name = "private_key")
+    private String privateKey;
+
+    @Column(name = "wallet_url")
+    private String walletUrl;
+
+    @Column(name = "transaction_id")
+    private String transactionId;
+
+
 }
