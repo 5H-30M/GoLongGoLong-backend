@@ -4,7 +4,6 @@ import hello.golong.domain.member.dao.MemberRepository;
 import hello.golong.domain.member.domain.Member;
 import hello.golong.domain.member.dto.MemberDto;
 import hello.golong.domain.post.application.PostService;
-import hello.golong.domain.post.domain.Post;
 import hello.golong.domain.post.dto.PostDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,9 +30,11 @@ public class MemberService {
                 .orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다.")));
     }
 
-    public List<PostDto> findPostByMemberId(Long uploader_id) {
-        return postService.findPostByUploaderId(uploader_id);
+    public MemberDto findMemberBySnsEmail(String sns_email) {
+        return getMemberDto(memberRepository.findBySnsEmail(sns_email)
+                .orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다.")));
     }
+
 
 
     public MemberDto updateMember(MemberDto memberDto) {
