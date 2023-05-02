@@ -58,7 +58,7 @@ public class PostService {
         postRepository.save(post);
         postDto.setPost_id(post.getId());
 
-        planService.savePlans(postDto.getPost_id(), postDto.getPlans());
+        planService.savePlans(postDto.getPost_id(), 0L, postDto.getPlans());
         imgService.saveImg(postDto.getImages(), postDto.getPost_id(), 0L);
 
         return postDto;
@@ -117,7 +117,7 @@ public class PostService {
                 .raised_people(post.getRaisedPeople())
                 .amount(post.getAmount())
                 .images(imgService.findImgByPostId(post.getId(), 0L))
-                .plans(planService.findPlans(post.getId()))
+                .plans(planService.findPlans(post.getId(), 0L))
                 .privateKey(post.getPrivateKey())
                 .walletUrl(post.getWalletUrl())
                 .transactionId(post.getTransactionId())
@@ -130,7 +130,7 @@ public class PostService {
         if(postOptional.isPresent()) {
             postRepository.deleteById(post_id);
             imgService.deleteImg(post_id, 0L);
-            planService.deletePlans(post_id);
+            planService.deletePlans(post_id, 0L);
             if(postOptional.get().getStatus() >= 4) {
                 reviewService.deleteReview(reviewService.findReviewByPostId(post_id).getId());
             }
