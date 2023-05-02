@@ -2,6 +2,7 @@ package hello.golong.domain.member.api;
 
 import hello.golong.domain.member.application.MemberService;
 import hello.golong.domain.member.dto.MemberDto;
+
 import hello.golong.domain.member.dto.OauthToken;
 import hello.golong.domain.post.dto.PostDto;
 import okhttp3.Response;
@@ -9,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 import java.util.List;
 
@@ -17,7 +21,9 @@ import java.util.List;
 public class MemberController {
     //TODO : 컨트롤러 작성 및 컨트롤러 테스트
 
+
     @Autowired
+
     private final MemberService memberService;
 
 
@@ -29,6 +35,7 @@ public class MemberController {
     public ResponseEntity<MemberDto> getMember(@PathVariable("sns_email") String sns_email) {
         return ResponseEntity.ok().body(memberService.findMemberBySnsEmail(sns_email));
     }
+
     @GetMapping("/oauth/token")
     public ResponseEntity getLogin(@RequestParam("code")String code){
         System.out.println(code);
@@ -47,3 +54,4 @@ public class MemberController {
 
 
 }
+

@@ -34,6 +34,7 @@ public class PostService {
         this.reviewService = reviewService;
     }
 
+    //TODO : 암호화폐 관련 컬럼 추가 수정하기
     public PostDto createPost(PostDto postDto) throws IOException {
 
         postDto.setCreated_at(LocalDateTime.now());
@@ -49,6 +50,9 @@ public class PostService {
                 .targetAmount(postDto.getTarget_amount())
                 .region(postDto.getRegion())
                 .amount(0L)
+                .privateKey(postDto.getPrivateKey())
+                .walletUrl(postDto.getWalletUrl())
+                .transactionId(postDto.getTransactionId())
                 .raisedPeople(0L).build();
 
         postRepository.save(post);
@@ -82,9 +86,7 @@ public class PostService {
 
         //TODO: Exception 핸들링하기
         Post post = postRepository.findById(post_id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
-        PostDto postDto = this.getPostDto(post);
-
-        return postDto;
+        return this.getPostDto(post);
 
     }
     public List<PostDto> findPostByUploaderId(Long uploaderId) {
@@ -99,9 +101,10 @@ public class PostService {
         return postDtos;
     }
 
+    //TODO : 암호화폐 관련 컬럼 추가 수정하기
     public PostDto getPostDto(Post post) {
 
-        PostDto postDto = PostDto.builder()
+        return PostDto.builder()
                 .post_id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
@@ -115,9 +118,11 @@ public class PostService {
                 .amount(post.getAmount())
                 .images(imgService.findImgByPostId(post.getId(), 0L))
                 .plans(planService.findPlans(post.getId()))
+                .privateKey(post.getPrivateKey())
+                .walletUrl(post.getWalletUrl())
+                .transactionId(post.getTransactionId())
                 .build();
 
-        return postDto;
     }
 
     public void deletePost(Long post_id) {

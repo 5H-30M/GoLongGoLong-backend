@@ -44,7 +44,11 @@ public class MemberService {
     }
 
     public MemberDto findMemberBySnsEmail(String sns_email) {
+
         return getMemberDto(memberRepository.findBySnsEmail(sns_email));
+
+        //return getMemberDto(memberRepository.findBySnsEmail(sns_email)
+          //      .orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다.")));
 
     }
 
