@@ -1,7 +1,6 @@
 package hello.golong.domain.member.domain;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -39,8 +38,6 @@ public class Member {
     @Column(unique = true, name = "member_id")
     private Long id;
 
-//    @Column(name = "kakao_id")//kakaoId추가
-//    private Long kakaoId;
     @Column(name = "member_name")
     private String name;
 
@@ -52,15 +49,12 @@ public class Member {
 
     //TODO : 개인키 암호화 여부 결정하기
     @Column(name = "private_key")
-    private String userRole;
+    private String privateKey;
 
-
-    //userRole 넣어주세요..
     @Column(name = "is_verified")
     private Boolean isVerified;
 
     @Column(name = "created_at")
-    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(name ="profile_img_url")
@@ -72,23 +66,14 @@ public class Member {
     @Column(name = "sns_type")
     private Long snsType;
 
-//    @Column(name = "user_role")//role
-//    private String userRole;
-
-
     @Column(name = "sns_profile")
     private Long snsProfile; // 사용자 유니크 ID 정보를 가져올 수 있음
 
     //TODO : 소셜로그인에서 저장해야할 정보인지 다시 확인하기
+    @Column(name = "access_token")
+    private String accessToken;
 
-//    @Builder
-//    public Member(Long kakaoId, String kakaoProfileImg, String kakaoNickname,
-//                String kakaoEmail, String userRole) {
-//
-//        this.id = kakaoId;
-//        this.profileImgUrl = kakaoProfileImg;
-//        this.name = kakaoNickname;
-//        this.snsEmail = kakaoEmail;
-//        this.userRole = userRole;
-//    }
+
+
+
 }
