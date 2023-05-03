@@ -2,6 +2,7 @@ package hello.golong.domain.review.application;
 
 import hello.golong.domain.comment.application.CommentService;
 import hello.golong.domain.img.application.ImgService;
+import hello.golong.domain.post.application.PlanService;
 import hello.golong.domain.post.dao.PostRepository;
 import hello.golong.domain.review.dao.ReviewRepository;
 import hello.golong.domain.review.domain.Review;
@@ -24,14 +25,16 @@ public class ReviewService {
     private final CommentService commentService;
 
     private final PostRepository postRepository;
+    private final PlanService planService;
 
 
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository, ImgService imgService, CommentService commentService, PostRepository postRepository) {
+    public ReviewService(ReviewRepository reviewRepository, ImgService imgService, CommentService commentService, PostRepository postRepository, PlanService planService) {
         this.reviewRepository = reviewRepository;
         this.imgService = imgService;
         this.commentService = commentService;
         this.postRepository = postRepository;
+        this.planService = planService;
     }
 
     public ReviewDto createReview(ReviewDto reviewDto) throws IOException {
@@ -46,13 +49,13 @@ public class ReviewService {
         reviewDto.setRaisedPeople(0L);
         reviewDto.setAmount(0L);
 
-
+        //ReviewDto
         Review review = Review.builder()
                 .postId(reviewDto.getPostId())
                 .content(reviewDto.getContent())
                 .createdAt(reviewDto.getCreatedAt())
                 .amount(reviewDto.getAmount())
-                .raisedPeople(reviewDto.getRaisedPeople())
+                        .raisedPeople(reviewDto.getRaisedPeople())
                 .build();
 
         reviewRepository.save(review);
@@ -60,6 +63,9 @@ public class ReviewService {
 
         imgService.saveImg(new ArrayList<>(Arrays.asList(reviewDto.getReceipt())), reviewDto.getId(), 2L);
         imgService.saveImg(reviewDto.getImages(), reviewDto.getId(), 1L);
+
+        planService.savePlans(review.getId(), 1L, reviewDto.getUsages());
+
 
         return reviewDto;
     }
@@ -81,6 +87,7 @@ public class ReviewService {
                     .images(imgService.findImgByPostId(review.getId(), 1L))
                     .receipt(imgService.findImgByPostId(review.getId(), 2L).get(0))
                     .comments(commentService.findByReviewId(review.getId()))
+                    .usages(planService.findPlans(review.getId(), 1L))
                     .build();
 
             reviewDtos.add(reviewDto);
@@ -114,6 +121,7 @@ public class ReviewService {
             reviewDto.setCreatedAt(review.getCreatedAt());
             reviewDto.setImages(imgService.findImgByPostId(review.getId(), 1L));
             reviewDto.setReceipt(imgService.findImgByPostId(review.getId(), 2L).get(0));
+            reviewDto.setUsages(planService.findPlans(review.getId(), 1L));
             reviewDto.setComments(commentService.findByReviewId(review.getId()));
 
         });
@@ -127,6 +135,7 @@ public class ReviewService {
         optionalReview.ifPresent(review -> {
             reviewRepository.deleteById(review_id);
             imgService.deleteImg(review_id, 1L);
+            planService.deletePlans(review_id, 1L);
             commentService.deleteByReviewId(review_id);
         });
 

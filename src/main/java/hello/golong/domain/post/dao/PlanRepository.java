@@ -8,5 +8,5 @@ import java.util.Optional;
 
 
 public interface PlanRepository extends JpaRepository<Plan, Long> {
-    Optional<List<Plan>> findByPostId(Long post_id);
+    Optional<List<Plan>> findByPostIdAndType(Long post_id, Long type);
 }

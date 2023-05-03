@@ -23,6 +23,8 @@ public class Plan {
     @Column(name = "post_id")
     private Long postId;
 
+    private Long type;
+
     @Column(columnDefinition = "LONGTEXT")
     private String content;
 
