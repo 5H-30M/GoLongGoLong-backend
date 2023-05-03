@@ -25,13 +25,15 @@ public class PostService {
     private final ImgService imgService;
 
     private final ReviewService reviewService;
+    private final HeartService heartService;
 
     @Autowired
-    public PostService(PostRepository postRepository, PlanService planService, ImgService imgService, ReviewService reviewService) {
+    public PostService(PostRepository postRepository, PlanService planService, ImgService imgService, ReviewService reviewService, HeartService heartService) {
         this.postRepository = postRepository;
         this.planService = planService;
         this.imgService = imgService;
         this.reviewService = reviewService;
+        this.heartService = heartService;
     }
 
     //TODO : 암호화폐 관련 컬럼 추가 수정하기
@@ -63,6 +65,16 @@ public class PostService {
 
         return postDto;
 
+    }
+
+    public List<PostDto> findHeartedPost(Long member_id) {
+        List<Long> postIds = heartService.findHeartedPost(member_id);
+        List<PostDto> postDtos = new ArrayList<>();
+        for(Long id : postIds) {
+            postDtos.add(this.getPostDto(postRepository
+                    .findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."))));
+        }
+        return postDtos;
     }
 
     public List<PostDto> findAllPosts() {

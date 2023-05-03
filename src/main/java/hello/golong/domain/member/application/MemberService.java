@@ -43,6 +43,10 @@ public class MemberService {
                 .orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다.")));
     }
 
+    public List<PostDto> findHeartedPost(Long member_id) {
+        return postService.findHeartedPost(member_id);
+    }
+
     public MemberDto findMemberBySnsEmail(String sns_email) {
 
         return getMemberDto(memberRepository.findBySnsEmail(sns_email));

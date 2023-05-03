@@ -36,6 +36,12 @@ public class MemberController {
         return ResponseEntity.ok().body(memberService.findMemberBySnsEmail(sns_email));
     }
 
+    //TODO : 찜한 게시글 반환하는 API 및 메소드 계층 구조 수정하기
+    @GetMapping("/{member_id}/heartedPost")
+    public ResponseEntity<List<PostDto>> getHeartedPost(@PathVariable("member_id") Long member_id) {
+        return ResponseEntity.ok().body(memberService.findHeartedPost(member_id));
+    }
+
     @GetMapping("/oauth/token")
     public ResponseEntity getLogin(@RequestParam("code")String code){
         System.out.println(code);
