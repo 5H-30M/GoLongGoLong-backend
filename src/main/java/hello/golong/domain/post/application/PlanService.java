@@ -22,22 +22,23 @@ public class PlanService {
         this.planRepository = planRepository;
     }
 
-    public void savePlans(Long post_id, Map<String, Long> plans) {
+    public void savePlans(Long post_id, Long type, Map<String, Long> plans) {
 
         for(String key : plans.keySet()) {
             Plan plan = Plan.builder()
                     .postId(post_id)
                     .content(key)
                     .amount(plans.get(key))
+                    .type(type)
                     .build();
 
             planRepository.save(plan);
         }
     }
 
-    public Map<String, Long> findPlans(Long post_id) {
+    public Map<String, Long> findPlans(Long post_id, Long type) {
 
-        Optional<List<Plan>> optionalPlans = planRepository.findByPostId(post_id);
+        Optional<List<Plan>> optionalPlans = planRepository.findByPostIdAndType(post_id, type);
         Map<String, Long> map = new HashMap<>();
 
         optionalPlans.ifPresent( plans -> {
@@ -48,9 +49,9 @@ public class PlanService {
         return map;
     }
 
-    public void deletePlans(Long post_id) {
+    public void deletePlans(Long post_id, Long type) {
 
-        Optional<List<Plan>> optionalPlans = planRepository.findByPostId(post_id);
+        Optional<List<Plan>> optionalPlans = planRepository.findByPostIdAndType(post_id, type);
 
         optionalPlans.ifPresent( plans -> {
             for(Plan plan : plans) {
