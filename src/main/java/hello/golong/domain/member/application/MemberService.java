@@ -47,6 +47,7 @@ public class MemberService {
         return getMemberDto(memberRepository.findBySnsEmail(sns_email));
 
     }
+    //sns
 
 
 
