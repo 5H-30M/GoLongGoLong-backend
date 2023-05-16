@@ -20,17 +20,21 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
+
+    private final PlanService planService;
     private final ImgService imgService;
 
     private final ReviewService reviewService;
 
     @Autowired
-    public PostService(PostRepository postRepository, ImgService imgService, ReviewService reviewService) {
+    public PostService(PostRepository postRepository, PlanService planService, ImgService imgService, ReviewService reviewService) {
         this.postRepository = postRepository;
+        this.planService = planService;
         this.imgService = imgService;
         this.reviewService = reviewService;
     }
 
+    //TODO : 암호화폐 관련 컬럼 추가 수정하기
     public PostDto createPost(PostDto postDto) throws IOException {
 
         postDto.setCreated_at(LocalDateTime.now());
@@ -44,11 +48,17 @@ public class PostService {
                 .createdAt(postDto.getCreated_at())
                 .period(postDto.getPeriod())
                 .targetAmount(postDto.getTarget_amount())
-                .region(postDto.getRegion()).build();
+                .region(postDto.getRegion())
+                .amount(0L)
+                .privateKey(postDto.getPrivateKey())
+                .walletUrl(postDto.getWalletUrl())
+                .transactionId(postDto.getTransactionId())
+                .raisedPeople(0L).build();
 
         postRepository.save(post);
         postDto.setPost_id(post.getId());
 
+        planService.savePlans(postDto.getPost_id(), 0L, postDto.getPlans());
         imgService.saveImg(postDto.getImages(), postDto.getPost_id(), 0L);
 
         return postDto;
@@ -61,20 +71,7 @@ public class PostService {
         List<PostDto> postDtos = new ArrayList<>();
 
         for(Post post : posts) {
-            PostDto postDto = PostDto.builder()
-                    .post_id(post.getId())
-                    .title(post.getTitle())
-                    .content(post.getContent())
-                    .status(post.getStatus())
-                    .uploader_id(post.getUploaderId())
-                    .created_at(post.getCreatedAt())
-                    .period(post.getPeriod())
-                    .target_amount(post.getTargetAmount())
-                    .region(post.getRegion())
-                    .images(imgService.findImgByPostId(post.getId(), 0L))
-                    .build();
-
-
+            PostDto postDto = this.getPostDto(post);
             postDtos.add(postDto);
         }
 
@@ -87,25 +84,44 @@ public class PostService {
     //TODO : findPost 리팩토링
     public PostDto findPost(Long post_id) {
 
-        PostDto postDto = new PostDto();
-        Optional<Post> postOptional = postRepository.findById(post_id);
-        postOptional.orElseThrow(()-> new IllegalArgumentException("존재하지 않는 게시글입니다."));
-        postOptional.ifPresent(post -> {
+        //TODO: Exception 핸들링하기
+        Post post = postRepository.findById(post_id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
+        return this.getPostDto(post);
 
-            postDto.setPost_id(post.getId());
-            postDto.setRegion(post.getRegion());
-            postDto.setContent(post.getContent());
-            postDto.setPeriod(post.getPeriod());
-            postDto.setTitle(post.getTitle());
-            postDto.setUploader_id(post.getUploaderId());
-            postDto.setCreated_at(post.getCreatedAt());
-            postDto.setTarget_amount(post.getTargetAmount());
-            postDto.setStatus(post.getStatus());
-            postDto.setImages(imgService.findImgByPostId(post_id, 0L));
+    }
+    public List<PostDto> findPostByUploaderId(Long uploaderId) {
 
+        Optional<List<Post>> postOptional = postRepository.findByUploaderId(uploaderId);
+        List<PostDto> postDtos = new ArrayList<>();
+        postOptional.ifPresent(posts -> {
+            for(Post post : posts) {
+                postDtos.add(this.getPostDto(post));
+            }
         });
+        return postDtos;
+    }
 
-        return postDto;
+    //TODO : 암호화폐 관련 컬럼 추가 수정하기
+    public PostDto getPostDto(Post post) {
+
+        return PostDto.builder()
+                .post_id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .status(post.getStatus())
+                .uploader_id(post.getUploaderId())
+                .created_at(post.getCreatedAt())
+                .period(post.getPeriod())
+                .target_amount(post.getTargetAmount())
+                .region(post.getRegion())
+                .raised_people(post.getRaisedPeople())
+                .amount(post.getAmount())
+                .images(imgService.findImgByPostId(post.getId(), 0L))
+                .plans(planService.findPlans(post.getId(), 0L))
+                .privateKey(post.getPrivateKey())
+                .walletUrl(post.getWalletUrl())
+                .transactionId(post.getTransactionId())
+                .build();
 
     }
 
@@ -114,6 +130,7 @@ public class PostService {
         if(postOptional.isPresent()) {
             postRepository.deleteById(post_id);
             imgService.deleteImg(post_id, 0L);
+            planService.deletePlans(post_id, 0L);
             if(postOptional.get().getStatus() >= 4) {
                 reviewService.deleteReview(reviewService.findReviewByPostId(post_id).getId());
             }
@@ -146,5 +163,12 @@ public class PostService {
             if(postDto.getContent() != null) post.updateContent(postDto.getContent());
         });
 
+    }
+
+    public void updateDonationInformation(Long post_id, Long new_amount) {
+        Optional<Post> postOptional = postRepository.findById(post_id);
+        postOptional.ifPresent(post -> {
+            post.updateDonationInformation(new_amount);
+        });
     }
 }
