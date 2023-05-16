@@ -67,6 +67,12 @@ public class MemberService {
         return getMemberDto(member);
     }
 
+    public void updateGOLtokens(Long id, Long amount) {
+        memberRepository.findById(id).ifPresent(member -> {
+            member.updateGOLtokens(amount);
+        });
+    }
+
     public void deleteMember(Long id) {
         Optional<Member> memberOptional = memberRepository.findById(id);
         memberOptional.ifPresent(member -> {
