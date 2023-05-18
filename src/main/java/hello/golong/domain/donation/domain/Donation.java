@@ -21,7 +21,7 @@ public class Donation {
     private Long id;
 
     @Column(name = "transaction_id")
-    private Long transactionId;
+    private String transactionId;
 
     private Long amount;
 

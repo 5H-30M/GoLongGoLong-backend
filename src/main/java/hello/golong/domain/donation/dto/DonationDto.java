@@ -13,7 +13,7 @@ public class DonationDto {
 
     private Long id;
 
-    private Long transactionId;
+    private String transactionId;
 
     private Long amount;
 
