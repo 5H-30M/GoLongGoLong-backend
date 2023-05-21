@@ -44,4 +44,5 @@ public class PostDto {
 
     private String walletUrl;
 
+    private String transactionId;
 }

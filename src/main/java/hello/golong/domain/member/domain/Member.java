@@ -23,7 +23,7 @@ public class Member {
     }
 
     public void updateGOLtokens(Long GOLtokens) {
-        this.GOLtokens = this.GOLtokens - GOLtokens;
+        this.GOLtokens = GOLtokens;
     }
 
     public void updateIsVerified(Boolean isVerified) {

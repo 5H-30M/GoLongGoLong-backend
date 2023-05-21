@@ -20,7 +20,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import static hello.golong.domain.member.config.SecurityConfig.FRONT_URL;
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -66,12 +65,6 @@ public class MemberService {
         if(memberDto.getProfileImgUrl() != null) member.updateProfileImgUrl(memberDto.getProfileImgUrl());
 
         return getMemberDto(member);
-    }
-
-    public void updateGOLtokens(Long id, Long amount) {
-        memberRepository.findById(id).ifPresent(member -> {
-            member.updateGOLtokens(amount);
-        });
     }
 
     public void deleteMember(Long id) {
@@ -168,16 +161,10 @@ public class MemberService {
     public String SaveUserAndGetToken(String token) {
         KakaoProfile profile = findProfile(token);
 
-        //TODO : member 저장시 walletAddress 수정
         Member member = memberRepository.findBySnsEmail(profile.getKakao_account().getEmail());
         if (member == null) {
             member = member.builder()
                     .id(profile.getId())
-                    .GOLtokens(0L)
-                    //.walletUrl()
-                    //.privateKey()
-                    .isVerified(false)
-                    .createdAt(LocalDateTime.now())
                     .profileImgUrl(profile.getKakao_account().getProfile().getProfile_image_url())
                     .name(profile.getKakao_account().getProfile().getNickname())
                     .snsEmail(profile.getKakao_account().getEmail())

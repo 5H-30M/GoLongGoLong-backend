@@ -1,13 +1,11 @@
+/*
 package hello.golong.domain.donation.api;
 
 import hello.golong.domain.donation.application.DonationService;
-import hello.golong.domain.donation.dto.DonationDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.web3j.protocol.exceptions.TransactionException;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -20,12 +18,7 @@ public class DonationController {
         this.donationService = donationService;
     }
 
-    @PostMapping
-    public ResponseEntity<DonationDto> createDonation(@RequestBody DonationDto donationDto) throws TransactionException, IOException {
-        donationDto = donationService.createDonation(donationDto);
-        return ResponseEntity.ok().body(donationDto);
-
-    }
+    //TODO : 결제 모듈 구현하고 수정하기
 
 
-}
+}*/

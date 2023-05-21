@@ -72,6 +72,8 @@ public class Post {
     @Column(name = "wallet_url")
     private String walletUrl;
 
+    @Column(name = "transaction_id")
+    private String transactionId;
 
 
 }
