@@ -3,6 +3,10 @@ package hello.golong.domain.ocr.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 @Service
 public class ClovaOCRService {
 
@@ -13,6 +17,11 @@ public class ClovaOCRService {
     private String apiURL;
 
 
+    public String requestClovaOCR() throws IOException {
 
+        URL url = new URL(apiURL);
 
+        HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+        return "TOTALPRICE";
+    }
 }
