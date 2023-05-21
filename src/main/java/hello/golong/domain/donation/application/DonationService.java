@@ -5,7 +5,6 @@ import hello.golong.domain.donation.domain.Donation;
 import hello.golong.domain.donation.dto.DonationDto;
 import hello.golong.domain.member.application.MemberService;
 import hello.golong.domain.post.application.PostService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.web3j.protocol.exceptions.TransactionException;
 
@@ -27,18 +26,13 @@ public class DonationService {
         this.smartContractService = smartContractService;
     }
 
-    @Value("${haeun-wallet-private-key}")
-    private String privateKey;//TODO : 테스트를 위해 현재 내 privateKey 직접 넣음
-    //TODO : 암호화한 후에는 삭제할 내용
-
     public DonationDto createDonation(DonationDto donationDto) throws TransactionException, IOException {
 
         String memberAddress = memberService.findMember(donationDto.getMemberId()).getWalletUrl();
         String postAddress = postService.findPost(donationDto.getPostId()).getWalletUrl();
 
-
         //TODO : privateKey 복호화 알고리즘으로 처리하기
-        String transactionId = smartContractService.transfer(postAddress, memberAddress, privateKey, donationDto.getAmount());
+        String transactionId = smartContractService.transfer(postAddress, memberAddress, "210532c54c56fe8f221d55d6d7b462ae3fa831f0059b49769450d8812f21d6fa", donationDto.getAmount());
 
         donationDto.setTransactionId(transactionId);
 
@@ -46,7 +40,6 @@ public class DonationService {
         donationRepository.save(donation);
         donationDto.setId(donation.getId());
 
-        //TODO : update 반영안되는 문제 해결하기
         memberService.updateGOLtokens(donationDto.getMemberId(), donationDto.getAmount());
         postService.updateDonationInformation(donationDto.getPostId(), donationDto.getAmount());
 

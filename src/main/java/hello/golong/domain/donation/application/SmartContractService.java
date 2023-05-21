@@ -1,7 +1,6 @@
 package hello.golong.domain.donation.application;
 
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.TypeReference;
@@ -46,16 +45,14 @@ public class SmartContractService {
     }*/
 
     private String contractAddress = "0xb248d4cbb7c728ef0e81de0b4b17734aeed2d280";
-
-    @Value("${sepolia-node-url}")
-    private String nodeUrl;
+    private String nodeUrl = "https://sepolia.infura.io/v3/ca7db5c20c11412084523bb7cbb7289d";
     private Web3j web3j = Web3j.build(new HttpService(nodeUrl));
 
 
     public String transfer(String postAddress, String memberAddress, String privateKey, Long amount) throws IOException, TransactionException {
         long TX_END_CHECK_DURATION = 5000;
         int TX_END_CHECK_RETRY = 3;
-        long CHAIN_ID = 11155111;//sepolia chain id
+        long CHAIN_ID = 11155111;
 
         Credentials credential = Credentials.create(privateKey);
 
