@@ -46,7 +46,6 @@ public class DonationService {
         donationRepository.save(donation);
         donationDto.setId(donation.getId());
 
-        //TODO : update 반영안되는 문제 해결하기
         memberService.updateGOLtokens(donationDto.getMemberId(), donationDto.getAmount());
         postService.updateDonationInformation(donationDto.getPostId(), donationDto.getAmount());
 

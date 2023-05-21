@@ -1,7 +1,6 @@
 package hello.golong.domain.donation.application;
 
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.TypeReference;
@@ -46,9 +45,7 @@ public class SmartContractService {
     }*/
 
     private String contractAddress = "0xb248d4cbb7c728ef0e81de0b4b17734aeed2d280";
-
-    @Value("${sepolia-node-url}")
-    private String nodeUrl;
+    private String nodeUrl = "https://sepolia.infura.io/v3/ca7db5c20c11412084523bb7cbb7289d";
     private Web3j web3j = Web3j.build(new HttpService(nodeUrl));
 
 
