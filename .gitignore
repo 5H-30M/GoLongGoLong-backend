@@ -38,3 +38,9 @@ out/
 
 ### aws 연결 정보 ###
 application-aws.properties
+
+### clova ocr 정보 ###
+application-clova.properties
+
+### 스마트 컨트랙트 관련 정보 ###
+application-smartcontract.properties
