@@ -38,9 +38,3 @@ out/
 
 ### aws 연결 정보 ###
 application-aws.properties
-
-### clova ocr 정보 ###
-application-clova.properties
-
-### 지갑 개인키 정보 ###
-application-wallet.properties

@@ -52,7 +52,7 @@ public class SmartContractService {
     public String transfer(String postAddress, String memberAddress, String privateKey, Long amount) throws IOException, TransactionException {
         long TX_END_CHECK_DURATION = 5000;
         int TX_END_CHECK_RETRY = 3;
-        long CHAIN_ID = 11155111;//sepolia chain id
+        long CHAIN_ID = 11155111;
 
         Credentials credential = Credentials.create(privateKey);
 
