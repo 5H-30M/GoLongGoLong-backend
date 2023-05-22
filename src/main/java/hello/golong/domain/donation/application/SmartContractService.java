@@ -1,6 +1,8 @@
 package hello.golong.domain.donation.application;
 
 
+import hello.golong.domain.donation.domain.Donation;
+import hello.golong.domain.donation.dto.DonationDto;
 import org.springframework.stereotype.Service;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.TypeReference;
@@ -28,33 +30,31 @@ import org.web3j.tx.response.TransactionReceiptProcessor;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Service
 public class SmartContractService {
-/*
-    public boolean compareWalletAddresses(String address1, String address2) {
-        String lowerAddress1 = address1.toLowerCase();
-        String lowerAddress2 = address2.toLowerCase();
-
-        return lowerAddress1.equals(lowerAddress2);
-    }*/
 
     private String contractAddress = "0xb248d4cbb7c728ef0e81de0b4b17734aeed2d280";
     private String nodeUrl = "https://sepolia.infura.io/v3/ca7db5c20c11412084523bb7cbb7289d";
     private Web3j web3j = Web3j.build(new HttpService(nodeUrl));
 
+    //TODO : donationDto를 여기까지 끌고오는 것은 시스템 구조상 좋지 않은것 같긴한데... 그치만 transactionId랑 시간 둘다 반환할 수 없으니까..
+    //TODO : 아니면 List<String> 이라도 사용하는게 나은가..?
 
-    public String transfer(String postAddress, String memberAddress, String privateKey, Long amount) throws IOException, TransactionException {
-        long TX_END_CHECK_DURATION = 5000;
+    //String postAddress, String memberAddress, String privateKey, Long amount
+    public DonationDto transfer(String postAddress, String memberAddress, DonationDto donationDto) throws IOException, TransactionException {
+
+        long TX_END_CHECK_DURATION = 10000;
         int TX_END_CHECK_RETRY = 3;
         long CHAIN_ID = 11155111;
 
-        Credentials credential = Credentials.create(privateKey);
+        Credentials credential = Credentials.create(donationDto.getPrivateKey());
+
+        //TODO : 여기 예외처리로 바꾸기 , 일단 어차피 isCorrectPrivateKey에서 Exceptino 처리해서 잘못된 개인키일경우 그 메소드에서 프로그램 종료됨
+        //TODO : 에러 핸들링하기
+        if(!isCorrectPrivateKey(memberAddress, credential.getAddress())) return donationDto;
 
 
         //insufficient balance error 확인 코드
@@ -64,7 +64,7 @@ public class SmartContractService {
 
         List<Type> params = new ArrayList<>();
         params.add(new Address(postAddress));
-        params.add(new Uint256(new BigInteger(String.valueOf(amount))));
+        params.add(new Uint256(new BigInteger(String.valueOf(donationDto.getAmount()))));
 
         List<TypeReference<?>> returnTypes = Collections.<TypeReference<?>>emptyList();
 
@@ -88,14 +88,26 @@ public class SmartContractService {
                 BigInteger.ZERO
         ).getTransactionHash();
 
+
         TransactionReceipt receipt = receiptProcessor.waitForTransactionReceipt(txHash);
         System.out.println("Status = " + receipt.getStatus());
         System.out.println("TransactionHash = " + receipt.getTransactionHash());
 
-        return receipt.getTransactionHash();
+        //EthBlock.Block block = web3.ethGetBlockByHash(blockHash, false).send().getBlock();
+        EthBlock.Block block = web3j.ethGetBlockByHash(receipt.getBlockHash(), false).send().getBlock();
 
+        long timestamp = block.getTimestamp().longValue();
+        Date date = new Date(timestamp * 1000);
+        System.out.println("created At = " + date);
 
+        donationDto.setTransactionId(receipt.getTransactionHash());
+        donationDto.setTransactionCreatedAt(date);
+        return donationDto;
+    }
 
+    public boolean isCorrectPrivateKey(String address, String addressByPrivateKey) {
+        if(address.equalsIgnoreCase(addressByPrivateKey)) return true;
+        else throw new IllegalArgumentException("개인키가 일치하지 않습니다");
     }
 
 
