@@ -54,7 +54,6 @@ public class PostService {
                 .amount(0L)
                 .privateKey(postDto.getPrivateKey())
                 .walletUrl(postDto.getWalletUrl())
-                .transactionId(postDto.getTransactionId())
                 .raisedPeople(0L).build();
 
         postRepository.save(post);
@@ -132,7 +131,6 @@ public class PostService {
                 .plans(planService.findPlans(post.getId(), 0L))
                 .privateKey(post.getPrivateKey())
                 .walletUrl(post.getWalletUrl())
-                .transactionId(post.getTransactionId())
                 .build();
 
     }
