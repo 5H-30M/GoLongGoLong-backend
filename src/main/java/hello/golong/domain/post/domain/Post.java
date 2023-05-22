@@ -29,9 +29,9 @@ public class Post {
 
     //해당 게시글의 모금 정보 업데이트
     //TODO : 기부 스마트 컨트랙트 성공시 Post 기부 정보 업데이트하기
-    public void updateDonationInformation(Long new_amount) {
-        this.amount += new_amount;
-        this.raisedPeople++;
+    public void updateDonationInformation(Long new_amount, Long new_raised_people) {
+        this.amount = new_amount;
+        this.raisedPeople = new_raised_people;
     }
 
     @Id // pk
@@ -64,13 +64,15 @@ public class Post {
     @Column(name = "raised_people")
     private Long raisedPeople;
 
+    //amount가 지금까지 모인 돈, 즉 게시글 지갑에 있는 GOLtoken을 의미함...
+    //TODO : 칼럼명 바꾸는게 나을지!??!
     private Long amount;
 
     @Column(name = "private_key")
     private String privateKey;
 
-    @Column(name = "wallet_url")
-    private String walletUrl;
+    @Column(name = "wallet_address")
+    private String walletAddress;
 
 
 

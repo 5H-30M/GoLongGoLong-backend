@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +52,7 @@ public class PostService {
                 .region(postDto.getRegion())
                 .amount(0L)
                 .privateKey(postDto.getPrivateKey())
-                .walletUrl(postDto.getWalletUrl())
+                .walletAddress(postDto.getWalletAddress())
                 .raisedPeople(0L).build();
 
         postRepository.save(post);
@@ -64,12 +65,31 @@ public class PostService {
 
     }
 
+    public boolean isTheDonationPeriodOver(Post post) {
+
+        long daysBetween = ChronoUnit.DAYS.between(post.getCreatedAt(), LocalDateTime.now());
+
+        System.out.println("post 등록 시각 =" + post.getCreatedAt());
+        System.out.println("현재 시각 =" + LocalDateTime.now());
+        System.out.println("모금 기간 = " + post.getPeriod());
+        System.out.println("현재 모금 시작일로부터 지난 기간 = " + daysBetween);
+
+        if(daysBetween >= post.getPeriod()) return true;
+        else return false;
+    }
+
+
+
     public List<PostDto> findAllPosts() {
 
         List<Post> posts = postRepository.findAll();
         List<PostDto> postDtos = new ArrayList<>();
 
         for(Post post : posts) {
+            //날짜 계산해서 모금 완료 시점인지 확인
+            if(post.getStatus() == 0 && isTheDonationPeriodOver(post))
+                post.updateStatus(1);
+
             PostDto postDto = this.getPostDto(post);
             postDtos.add(postDto);
         }
@@ -85,6 +105,9 @@ public class PostService {
 
         //TODO: Exception 핸들링하기
         Post post = postRepository.findById(post_id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
+        //날짜 계산해서 모금 완료 시점인지 확인
+        if(post.getStatus() == 0 && isTheDonationPeriodOver(post))
+            post.updateStatus(1);
         return this.getPostDto(post);
 
     }
@@ -94,6 +117,9 @@ public class PostService {
         List<PostDto> postDtos = new ArrayList<>();
         postOptional.ifPresent(posts -> {
             for(Post post : posts) {
+                //날짜 계산해서 모금 완료 시점인지 확인
+                if(post.getStatus() == 0 && isTheDonationPeriodOver(post))
+                    post.updateStatus(1);
                 postDtos.add(this.getPostDto(post));
             }
         });
@@ -118,7 +144,7 @@ public class PostService {
                 .images(imgService.findImgByPostId(post.getId(), 0L))
                 .plans(planService.findPlans(post.getId(), 0L))
                 .privateKey(post.getPrivateKey())
-                .walletUrl(post.getWalletUrl())
+                .walletAddress(post.getWalletAddress())
                 .build();
 
     }
@@ -163,10 +189,10 @@ public class PostService {
 
     }
 
-    public void updateDonationInformation(Long post_id, Long new_amount) {
+    public void updateDonationInformation(Long post_id, Long amount) {
         Optional<Post> postOptional = postRepository.findById(post_id);
         postOptional.ifPresent(post -> {
-            post.updateDonationInformation(new_amount);
+            post.updateDonationInformation(post.getAmount()+amount, post.getRaisedPeople()+1);
         });
     }
 }
