@@ -31,14 +31,18 @@ public class DonationService {
         String memberAddress = memberService.findMember(donationDto.getMemberId()).getWalletUrl();
         String postAddress = postService.findPost(donationDto.getPostId()).getWalletUrl();
 
-        //TODO : privateKey 복호화 알고리즘으로 처리하기
-        String transactionId = smartContractService.transfer(postAddress, memberAddress, "210532c54c56fe8f221d55d6d7b462ae3fa831f0059b49769450d8812f21d6fa", donationDto.getAmount());
+        donationDto.setFromAddress(memberAddress);
+        donationDto.setToAddress(postAddress);
 
-        donationDto.setTransactionId(transactionId);
+        //TODO : 이건 내 privateKey 일 뿐임 나중에 삭제하기 복호화 알고리즘으로 처리하면 이거 필요없음
+        donationDto.setPrivateKey("210532c54c56fe8f221d55d6d7b462ae3fa831f0059b49769450d8812f21d6fa");
+
+        //String postAddress, String memberAddress, String privateKey, Long amount
+        //TODO : privateKey 복호화 알고리즘으로 처리하기
+        donationDto = smartContractService.transfer(postAddress, memberAddress, donationDto);
 
         Donation donation = this.buildDonation(donationDto);
         donationRepository.save(donation);
-        donationDto.setId(donation.getId());
 
         memberService.updateGOLtokens(donationDto.getMemberId(), donationDto.getAmount());
         postService.updateDonationInformation(donationDto.getPostId(), donationDto.getAmount());
@@ -48,7 +52,6 @@ public class DonationService {
 
     public Donation buildDonation(DonationDto donationDto) {
         return Donation.builder()
-                .postId(donationDto.getPostId())
                 .memberId(donationDto.getMemberId())
                 .transactionId(donationDto.getTransactionId())
                 .amount(donationDto.getAmount())
