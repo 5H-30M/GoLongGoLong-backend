@@ -4,6 +4,7 @@ import hello.golong.domain.img.dao.ImgRepository;
 import hello.golong.domain.img.domain.Img;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -73,6 +74,7 @@ public class ImgService {
 
     }
 
+    @Transactional
     public void updateReceipt(String file_name, Long post_id, Long post_type) {
         Optional<List<Img>> optionalImgs = imgRepository.findByPostIdAndType(post_id, post_type);
         optionalImgs.ifPresent( imgs -> {

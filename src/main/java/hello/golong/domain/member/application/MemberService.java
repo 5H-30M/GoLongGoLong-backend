@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -56,6 +57,7 @@ public class MemberService {
 
 
 
+    @Transactional
     public MemberDto updateMember(MemberDto memberDto) {
         Member member = memberRepository.findById(memberDto.getId())
                 .orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -68,6 +70,7 @@ public class MemberService {
         return getMemberDto(member);
     }
 
+    @Transactional
     public void updateGOLtokens(Long id, Long amount) {
         memberRepository.findById(id).ifPresent(member -> {
             member.updateGOLtokens(amount);

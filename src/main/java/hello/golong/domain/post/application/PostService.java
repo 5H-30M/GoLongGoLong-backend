@@ -8,6 +8,7 @@ import hello.golong.domain.review.application.ReviewService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -162,6 +163,7 @@ public class PostService {
         }
     }
 
+    @Transactional
     public void updateStatus(Long post_id, int status) {
         Optional<Post> postOptional = postRepository.findById(post_id);
         postOptional.ifPresent(post -> {
@@ -169,6 +171,7 @@ public class PostService {
         });
     }
 
+    @Transactional
     public void updatePost(Long post_id, PostDto postDto) {
 
         Optional<Post> postOptional = postRepository.findById(post_id);
@@ -189,6 +192,7 @@ public class PostService {
 
     }
 
+    @Transactional
     public void updateDonationInformation(Long post_id, Long amount) {
         Optional<Post> postOptional = postRepository.findById(post_id);
         postOptional.ifPresent(post -> {
