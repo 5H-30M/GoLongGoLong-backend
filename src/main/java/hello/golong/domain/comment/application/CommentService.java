@@ -5,6 +5,7 @@ import hello.golong.domain.comment.domain.Comment;
 import hello.golong.domain.comment.dto.CommentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -86,6 +87,7 @@ public class CommentService {
         return commentDto;
     }
 
+    @Transactional
     public void updateComment(Long comment_id, CommentDto commentDto) {
         Optional<Comment> optionalComment = commentRepository.findById(comment_id);
         optionalComment.ifPresent(comment -> {

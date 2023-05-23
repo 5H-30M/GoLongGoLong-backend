@@ -8,9 +8,11 @@ import hello.golong.domain.review.application.ReviewService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +36,7 @@ public class PostService {
         this.reviewService = reviewService;
     }
 
+    //TODO : 암호화폐 관련 컬럼 추가 수정하기
     public PostDto createPost(PostDto postDto) throws IOException {
 
         postDto.setCreated_at(LocalDateTime.now());
@@ -49,17 +52,34 @@ public class PostService {
                 .targetAmount(postDto.getTarget_amount())
                 .region(postDto.getRegion())
                 .amount(0L)
+                .privateKey(postDto.getPrivateKey())
+                .walletAddress(postDto.getWalletAddress())
                 .raisedPeople(0L).build();
 
         postRepository.save(post);
         postDto.setPost_id(post.getId());
 
-        planService.savePlans(postDto.getPost_id(), postDto.getPlans());
+        planService.savePlans(postDto.getPost_id(), 0L, postDto.getPlans());
         imgService.saveImg(postDto.getImages(), postDto.getPost_id(), 0L);
 
         return postDto;
 
     }
+
+    public boolean isTheDonationPeriodOver(Post post) {
+
+        long daysBetween = ChronoUnit.DAYS.between(post.getCreatedAt(), LocalDateTime.now());
+
+        System.out.println("post 등록 시각 =" + post.getCreatedAt());
+        System.out.println("현재 시각 =" + LocalDateTime.now());
+        System.out.println("모금 기간 = " + post.getPeriod());
+        System.out.println("현재 모금 시작일로부터 지난 기간 = " + daysBetween);
+
+        if(daysBetween >= post.getPeriod()) return true;
+        else return false;
+    }
+
+
 
     public List<PostDto> findAllPosts() {
 
@@ -67,6 +87,10 @@ public class PostService {
         List<PostDto> postDtos = new ArrayList<>();
 
         for(Post post : posts) {
+            //날짜 계산해서 모금 완료 시점인지 확인
+            if(post.getStatus() == 0 && isTheDonationPeriodOver(post))
+                post.updateStatus(1);
+
             PostDto postDto = this.getPostDto(post);
             postDtos.add(postDto);
         }
@@ -82,9 +106,10 @@ public class PostService {
 
         //TODO: Exception 핸들링하기
         Post post = postRepository.findById(post_id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
-        PostDto postDto = this.getPostDto(post);
-
-        return postDto;
+        //날짜 계산해서 모금 완료 시점인지 확인
+        if(post.getStatus() == 0 && isTheDonationPeriodOver(post))
+            post.updateStatus(1);
+        return this.getPostDto(post);
 
     }
     public List<PostDto> findPostByUploaderId(Long uploaderId) {
@@ -93,15 +118,19 @@ public class PostService {
         List<PostDto> postDtos = new ArrayList<>();
         postOptional.ifPresent(posts -> {
             for(Post post : posts) {
+                //날짜 계산해서 모금 완료 시점인지 확인
+                if(post.getStatus() == 0 && isTheDonationPeriodOver(post))
+                    post.updateStatus(1);
                 postDtos.add(this.getPostDto(post));
             }
         });
         return postDtos;
     }
 
+    //TODO : 암호화폐 관련 컬럼 추가 수정하기
     public PostDto getPostDto(Post post) {
 
-        PostDto postDto = PostDto.builder()
+        return PostDto.builder()
                 .post_id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
@@ -114,10 +143,11 @@ public class PostService {
                 .raised_people(post.getRaisedPeople())
                 .amount(post.getAmount())
                 .images(imgService.findImgByPostId(post.getId(), 0L))
-                .plans(planService.findPlans(post.getId()))
+                .plans(planService.findPlans(post.getId(), 0L))
+                .privateKey(post.getPrivateKey())
+                .walletAddress(post.getWalletAddress())
                 .build();
 
-        return postDto;
     }
 
     public void deletePost(Long post_id) {
@@ -125,7 +155,7 @@ public class PostService {
         if(postOptional.isPresent()) {
             postRepository.deleteById(post_id);
             imgService.deleteImg(post_id, 0L);
-            planService.deletePlans(post_id);
+            planService.deletePlans(post_id, 0L);
             if(postOptional.get().getStatus() >= 4) {
                 reviewService.deleteReview(reviewService.findReviewByPostId(post_id).getId());
             }
@@ -133,6 +163,7 @@ public class PostService {
         }
     }
 
+    @Transactional
     public void updateStatus(Long post_id, int status) {
         Optional<Post> postOptional = postRepository.findById(post_id);
         postOptional.ifPresent(post -> {
@@ -140,6 +171,7 @@ public class PostService {
         });
     }
 
+    @Transactional
     public void updatePost(Long post_id, PostDto postDto) {
 
         Optional<Post> postOptional = postRepository.findById(post_id);
@@ -160,10 +192,11 @@ public class PostService {
 
     }
 
-    public void updateDonationInformation(Long post_id, Long new_amount) {
+    @Transactional
+    public void updateDonationInformation(Long post_id, Long amount) {
         Optional<Post> postOptional = postRepository.findById(post_id);
         postOptional.ifPresent(post -> {
-            post.updateDonationInformation(new_amount);
+            post.updateDonationInformation(post.getAmount()+amount, post.getRaisedPeople()+1);
         });
     }
 }
