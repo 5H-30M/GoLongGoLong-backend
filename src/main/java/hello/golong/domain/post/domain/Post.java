@@ -28,7 +28,6 @@ public class Post {
     }
 
     //해당 게시글의 모금 정보 업데이트
-    //TODO : 기부 스마트 컨트랙트 성공시 Post 기부 정보 업데이트하기
     public void updateDonationInformation(Long new_amount, Long new_raised_people) {
         this.amount = new_amount;
         this.raisedPeople = new_raised_people;

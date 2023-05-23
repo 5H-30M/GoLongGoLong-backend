@@ -17,9 +17,9 @@ public class DonationDto {
 
     private Long amount;
 
-    private Long memberId;
+    private Long fromId;
 
-    private Long postId;
+    private Long toId;
 
     private String privateKey;
 
