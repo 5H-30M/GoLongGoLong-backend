@@ -9,6 +9,7 @@ import hello.golong.domain.review.domain.Review;
 import hello.golong.domain.review.dto.ReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -42,7 +43,7 @@ public class ReviewService {
         reviewDto.setCreatedAt(LocalDateTime.now());
         //TODO: repository 를 다른 서비스 도메인에서 직접 접근한다??? 안좋지 않을까...이부분 다시 설계하기
         postRepository.findById(reviewDto.getPostId()).ifPresent(post -> {
-            post.updateStatus(4);
+            post.updateStatus(3);
         });
 
         //TODO : donation entity 찾아서 인원수 및 모금액 부분 수정하기
@@ -143,6 +144,7 @@ public class ReviewService {
     }
 
 
+    @Transactional
     public void updateReview(Long review_id, ReviewDto reviewDto) {
         Optional<Review> optionalReview = reviewRepository.findById(review_id);
         optionalReview.ifPresent(review -> {

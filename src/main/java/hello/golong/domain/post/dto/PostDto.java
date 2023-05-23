@@ -42,6 +42,6 @@ public class PostDto {
 
     private String privateKey;
 
-    private String walletUrl;
+    private String walletAddress;
 
 }

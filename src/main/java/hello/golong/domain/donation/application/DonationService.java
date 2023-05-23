@@ -28,8 +28,8 @@ public class DonationService {
 
     public DonationDto createDonation(DonationDto donationDto) throws TransactionException, IOException {
 
-        String memberAddress = memberService.findMember(donationDto.getMemberId()).getWalletUrl();
-        String postAddress = postService.findPost(donationDto.getPostId()).getWalletUrl();
+        String memberAddress = memberService.findMember(donationDto.getMemberId()).getWalletAddress();
+        String postAddress = postService.findPost(donationDto.getPostId()).getWalletAddress();
 
         donationDto.setFromAddress(memberAddress);
         donationDto.setToAddress(postAddress);

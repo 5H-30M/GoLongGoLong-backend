@@ -4,6 +4,7 @@ import hello.golong.domain.member.application.MemberService;
 import hello.golong.domain.member.dto.MemberDto;
 
 import hello.golong.domain.member.dto.OauthToken;
+import hello.golong.domain.member.dto.WalletDto;
 import hello.golong.domain.post.dto.PostDto;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.web3j.crypto.Wallet;
 
 
 import java.util.List;
@@ -32,8 +34,13 @@ public class MemberController {
     }
 
     @GetMapping("/{sns_email}")
-    public ResponseEntity<MemberDto> getMember(@PathVariable("sns_email") String sns_email) {
+    public ResponseEntity<MemberDto> getMemberBySnsEmail(@PathVariable("sns_email") String sns_email) {
         return ResponseEntity.ok().body(memberService.findMemberBySnsEmail(sns_email));
+    }
+
+    @GetMapping("/{member_id}")
+    public ResponseEntity<MemberDto> getMember(@PathVariable("member_id") Long memberId) {
+        return ResponseEntity.ok().body(memberService.findMember(memberId));
     }
 
     @GetMapping("/oauth/token")
@@ -49,6 +56,11 @@ public class MemberController {
 //        headers.add(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
 
         return ResponseEntity.ok().headers(headers).body("success");
+    }
+
+    @PatchMapping("/wallet/{member_id}")
+    public ResponseEntity<MemberDto> updateWalletInformation(@PathVariable("member_id") Long member_id, @RequestBody WalletDto walletDto) {
+        return ResponseEntity.ok().body(memberService.updateWalletInformation(member_id, walletDto));
     }
 
 

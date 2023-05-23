@@ -7,6 +7,7 @@ import hello.golong.domain.member.domain.Member;
 import hello.golong.domain.member.dto.KakaoProfile;
 import hello.golong.domain.member.dto.MemberDto;
 import hello.golong.domain.member.dto.OauthToken;
+import hello.golong.domain.member.dto.WalletDto;
 import hello.golong.domain.post.application.PostService;
 import hello.golong.domain.post.dto.PostDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -44,6 +46,15 @@ public class MemberService {
                 .orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다.")));
     }
 
+    @Transactional
+    public MemberDto updateWalletInformation(Long member_id, WalletDto walletDto) {
+        Member member = memberRepository.findById(member_id)
+                .orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        member.updateWalletInformation(walletDto.getWalletAddress(), walletDto.getPrivateKey());
+        return this.findMember(member_id);
+    }
+
     public MemberDto findMemberBySnsEmail(String sns_email) {
 
         return getMemberDto(memberRepository.findBySnsEmail(sns_email));
@@ -56,6 +67,7 @@ public class MemberService {
 
 
 
+    @Transactional
     public MemberDto updateMember(MemberDto memberDto) {
         Member member = memberRepository.findById(memberDto.getId())
                 .orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -68,6 +80,7 @@ public class MemberService {
         return getMemberDto(member);
     }
 
+    @Transactional
     public void updateGOLtokens(Long id, Long amount) {
         memberRepository.findById(id).ifPresent(member -> {
             member.updateGOLtokens(amount);
@@ -172,7 +185,7 @@ public class MemberService {
         Member member = memberRepository.findBySnsEmail(profile.getKakao_account().getEmail());
         if (member == null) {
             member = member.builder()
-                    .id(profile.getId())
+                    .id(profile.getId())//kakaoid -> member별로 unique한 값
                     .GOLtokens(0L)
                     //.walletUrl()
                     //.privateKey()
@@ -194,12 +207,6 @@ public class MemberService {
 /*  public List<PostDto> findDonatedPost(Long id) {
 
     }
-
-    //TODO : 새로운 회원 추가
-    public MemberDto createMember(MemberDto memberDto) {
-
-        return memberDto;
-    }
  */
 
         public MemberDto getMemberDto(Member member) {
@@ -207,8 +214,8 @@ public class MemberService {
                     .id(member.getId())
                     .name(member.getName())
                     .GOLtokens(member.getGOLtokens())
-                    .walletUrl(member.getWalletUrl())
-//                    .privateKey(member.getPrivateKey())
+                    .walletAddress(member.getWalletAddress())
+                    .privateKey(member.getPrivateKey())
                     .isVerified(member.getIsVerified())
                     .createdAt(member.getCreatedAt())
                     .profileImgUrl(member.getProfileImgUrl())

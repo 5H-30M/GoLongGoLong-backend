@@ -26,6 +26,11 @@ public class Member {
         this.GOLtokens = this.GOLtokens - GOLtokens;
     }
 
+    public void updateWalletInformation(String walletAddress, String privateKey) {
+        this.walletAddress = walletAddress;
+        this.privateKey = privateKey;
+    }
+
     public void updateIsVerified(Boolean isVerified) {
         this.isVerified = isVerified;
     }
@@ -47,15 +52,17 @@ public class Member {
     @Column(name = "GOLtokens")
     private Long GOLtokens;
 
-    @Column(name = "wallet_url")
-    private String walletUrl;
+    @Column(name = "wallet_address")
+    private String walletAddress;
 
-    //TODO : 개인키 암호화 여부 결정하기
+    //암호화폐 지갑 암호화를 위한 개인키
     @Column(name = "private_key")
+    private String privateKey;
+
+
+    @Column(name = "user_role")
     private String userRole;
 
-
-    //userRole 넣어주세요..
     @Column(name = "is_verified")
     private Boolean isVerified;
 
