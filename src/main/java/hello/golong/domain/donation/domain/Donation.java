@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -25,11 +27,13 @@ public class Donation {
 
     private Long amount;
 
-    @Column(name = "member_id")
-    private Long memberId;
+    @Column(name = "created_at")
+    private Date createdAt;
 
-    @Column(name = "post_id")
-    private Long postId;
+    @Column(name = "from_address")
+    private String fromAddress;
 
+    @Column(name = "to_address")
+    private String toAddress;
 
 }

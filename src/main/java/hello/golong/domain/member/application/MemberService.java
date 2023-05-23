@@ -83,7 +83,7 @@ public class MemberService {
     @Transactional
     public void updateGOLtokens(Long id, Long amount) {
         memberRepository.findById(id).ifPresent(member -> {
-            member.updateGOLtokens(amount);
+            member.updateGOLtokens(member.getGOLtokens()-amount);
         });
     }
 
