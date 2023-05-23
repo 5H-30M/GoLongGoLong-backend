@@ -17,7 +17,7 @@ public class MemberDto {
 
     //TODO : MemberDto 항목 점검하기
     private Long id;
-    private Long kakaoId;
+
     private String token;
 
     private String name;//kakaoNickname
@@ -25,10 +25,9 @@ public class MemberDto {
 
     private String snsEmail;//kakaoEmail
 
-
     private Long GOLtokens;
 
-    private String walletUrl;
+    private String walletAddress;
 
     private String privateKey;
 
@@ -36,13 +35,12 @@ public class MemberDto {
 
     private LocalDateTime createdAt;
 
+    //TODO : dto에 userRole도 필요한지??
+
 
     private Long snsType;
 
     private Long snsProfile; // 사용자 유니크 ID 정보를 가져올 수 있음
-
-    //TODO : 소셜로그인에서 저장해야할 정보인지 다시 확인하기
-
 
     private List<PostDto> postsByMember;
 }

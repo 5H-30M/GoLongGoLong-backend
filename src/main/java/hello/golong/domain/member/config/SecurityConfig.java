@@ -36,6 +36,7 @@ public class SecurityConfig {
     @Autowired
     MemberRepository memberRepository;
 
+    //TODO : front_url 변경되면 바꿔야하는건가??
     public static final String FRONT_URL = "http://localhost:3000";
 
 
