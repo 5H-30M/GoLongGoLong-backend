@@ -8,6 +8,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DonationRepository extends JpaRepository<Donation, Long> {
-    Optional<List<Donation>> findByFromAddress(String address);
-    Optional<List<Donation>> findByToAddress(String address);
+    List<Donation> findByFromIdAndType(Long from_id, Long type);
 }

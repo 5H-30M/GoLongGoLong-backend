@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.web3j.protocol.exceptions.TransactionException;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -25,6 +26,11 @@ public class DonationController {
         donationDto = donationService.createDonation(donationDto);
         return ResponseEntity.ok().body(donationDto);
 
+    }
+
+    @GetMapping("/{member_id}")
+    public ResponseEntity<List<DonationDto>> getDonations(@PathVariable("member_id") Long member_id) {
+        return ResponseEntity.ok().body(donationService.findDonationsByMemberId(member_id));
     }
 
 

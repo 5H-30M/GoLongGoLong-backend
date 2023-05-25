@@ -30,6 +30,13 @@ public class Member {
         this.walletAddress = walletAddress;
         this.privateKey = privateKey;
     }
+    public void updateRegion(String region) {
+        this.region = region;
+    }
+
+    public void updateNickName(String nickName) {
+        this.nickName = nickName;
+    }
 
     public void updateIsVerified(Boolean isVerified) {
         this.isVerified = isVerified;
@@ -47,7 +54,10 @@ public class Member {
 //    @Column(name = "kakao_id")//kakaoId추가
 //    private Long kakaoId;
     @Column(name = "member_name")
-    private String name;
+    private String name;//실명
+
+    @Column(name = "nick_name")
+    private String nickName;
 
     @Column(name = "GOLtokens")
     private Long GOLtokens;
@@ -85,6 +95,8 @@ public class Member {
 
     @Column(name = "sns_profile")
     private Long snsProfile; // 사용자 유니크 ID 정보를 가져올 수 있음
+
+    private String region;
 
     //TODO : 소셜로그인에서 저장해야할 정보인지 다시 확인하기
 

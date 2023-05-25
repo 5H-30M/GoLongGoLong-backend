@@ -29,4 +29,6 @@ public class DonationDto {
 
     private Date transactionCreatedAt;
 
+    private Long type;
+
 }

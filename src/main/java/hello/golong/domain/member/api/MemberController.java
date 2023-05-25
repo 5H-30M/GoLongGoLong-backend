@@ -33,10 +33,10 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/{sns_email}")
+/*    @GetMapping("/{sns_email}")
     public ResponseEntity<MemberDto> getMemberBySnsEmail(@PathVariable("sns_email") String sns_email) {
         return ResponseEntity.ok().body(memberService.findMemberBySnsEmail(sns_email));
-    }
+    }*/
 
     @GetMapping("/{member_id}")
     public ResponseEntity<MemberDto> getMember(@PathVariable("member_id") Long memberId) {
@@ -62,6 +62,13 @@ public class MemberController {
     public ResponseEntity<MemberDto> updateWalletInformation(@PathVariable("member_id") Long member_id, @RequestBody WalletDto walletDto) {
         return ResponseEntity.ok().body(memberService.updateWalletInformation(member_id, walletDto));
     }
+
+    @PatchMapping("/update/{member_id}")
+    public ResponseEntity<MemberDto> updateMemberInformation(@PathVariable("member_id") Long member_id, @RequestBody MemberDto memberDto) {
+        return ResponseEntity.ok().body(memberService.updateMember(member_id, memberDto));
+    }
+
+
 
 
 
