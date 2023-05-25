@@ -1,6 +1,7 @@
 package hello.golong.domain.member.api;
 
 import hello.golong.domain.member.application.MemberService;
+import hello.golong.domain.member.dto.KakaoProfile;
 import hello.golong.domain.member.dto.MemberDto;
 
 import hello.golong.domain.member.dto.OauthToken;
@@ -48,14 +49,19 @@ public class MemberController {
         System.out.println(code);
         // 넘어온 인가 코드를 통해 access_token 발급
         OauthToken oauthToken = memberService.getAccessToken(code);
+        System.out.println(oauthToken);
 
         // 발급 받은 accessToken 으로 카카오 회원 정보 DB 저장
         String jwtToken = memberService.SaveUserAndGetToken(oauthToken.getAccess_token());
 
-        HttpHeaders headers = new HttpHeaders();
-//        headers.add(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
+        KakaoProfile profile = memberService.findProfile(oauthToken.getAccess_token());
+        Long userId=profile.getId();
+        //System.out.println(profile.id);
 
-        return ResponseEntity.ok().headers(headers).body("success");
+        HttpHeaders headers = new HttpHeaders();
+     //   headers.add("UserId", userId.toString());
+//        headers.add(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken)
+        return ResponseEntity.ok().headers(headers).body(userId);
     }
 
     @PatchMapping("/wallet/{member_id}")
@@ -67,6 +73,7 @@ public class MemberController {
     public ResponseEntity<MemberDto> updateMemberInformation(@PathVariable("member_id") Long member_id, @RequestBody MemberDto memberDto) {
         return ResponseEntity.ok().body(memberService.updateMember(member_id, memberDto));
     }
+
 
 
 

@@ -136,7 +136,7 @@ public class MemberService {
         }
 
 
-        System.out.println(oauthToken);
+        //System.out.println(oauthToken);
         return oauthToken;
 
     }
@@ -170,6 +170,7 @@ public class MemberService {
             e.printStackTrace();
         }
 
+        //System.out.println(kakaoProfile);
         return kakaoProfile;
 
     }
