@@ -38,3 +38,6 @@ out/
 
 ### aws 연결 정보 ###
 application-aws.properties
+
+### CLOVA OCR 정보 ###
+application-clova.properties
