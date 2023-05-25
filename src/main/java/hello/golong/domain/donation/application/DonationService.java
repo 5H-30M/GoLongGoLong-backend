@@ -28,8 +28,8 @@ public class DonationService {
 
     public DonationDto createDonation(DonationDto donationDto) throws TransactionException, IOException {
 
-        String memberAddress = memberService.findMember(donationDto.getMemberId()).getWalletAddress();
-        String postAddress = postService.findPost(donationDto.getPostId()).getWalletAddress();
+        String memberAddress = memberService.findMember(donationDto.getFromId()).getWalletAddress();
+        String postAddress = postService.findPost(donationDto.getToId()).getWalletAddress();
 
         donationDto.setFromAddress(memberAddress);
         donationDto.setToAddress(postAddress);
@@ -44,17 +44,19 @@ public class DonationService {
         Donation donation = this.buildDonation(donationDto);
         donationRepository.save(donation);
 
-        memberService.updateGOLtokens(donationDto.getMemberId(), donationDto.getAmount());
-        postService.updateDonationInformation(donationDto.getPostId(), donationDto.getAmount());
+        memberService.updateGOLtokens(donationDto.getFromId(), donationDto.getAmount());
+        postService.updateDonationInformation(donationDto.getToId(), donationDto.getAmount());
 
         return donationDto;
     }
 
     public Donation buildDonation(DonationDto donationDto) {
         return Donation.builder()
-                .memberId(donationDto.getMemberId())
                 .transactionId(donationDto.getTransactionId())
                 .amount(donationDto.getAmount())
+                .createdAt(donationDto.getTransactionCreatedAt())
+                .fromAddress(donationDto.getFromAddress())
+                .toAddress(donationDto.getToAddress())
                 .build();
     }
 
