@@ -36,4 +36,12 @@ public class Donation {
     @Column(name = "to_address")
     private String toAddress;
 
+    @Column(name =  "from_id")
+    private Long fromId;
+
+    @Column(name = "to_id")
+    private Long toId;
+
+    private Long type;
+
 }
