@@ -65,8 +65,6 @@ public class MemberService {
     }*/
 
 
-
-
     @Transactional
     public MemberDto updateMember(Long member_id, MemberDto memberDto) {
         Member member = memberRepository.findById(member_id)
@@ -86,6 +84,13 @@ public class MemberService {
     public void updateGOLtokens(Long id, Long amount) {
         memberRepository.findById(id).ifPresent(member -> {
             member.updateGOLtokens(member.getGOLtokens()-amount);
+        });
+    }
+
+    @Transactional
+    public void receiveGOLtokens(Long id, Long amount) {
+        memberRepository.findById(id).ifPresent(member -> {
+            member.updateGOLtokens(member.getGOLtokens()+amount);
         });
     }
 

@@ -4,8 +4,10 @@ import hello.golong.domain.donation.dao.DonationRepository;
 import hello.golong.domain.donation.domain.Donation;
 import hello.golong.domain.donation.dto.DonationDto;
 import hello.golong.domain.member.application.MemberService;
+import hello.golong.domain.member.domain.Member;
 import hello.golong.domain.member.dto.MemberDto;
 import hello.golong.domain.post.application.PostService;
+import hello.golong.domain.post.dto.PostDto;
 import org.springframework.stereotype.Service;
 import org.web3j.protocol.exceptions.TransactionException;
 
@@ -33,15 +35,14 @@ public class DonationService {
 
     public DonationDto createDonation(DonationDto donationDto) throws TransactionException, IOException {
 
-        String memberAddress = memberService.findMember(donationDto.getFromId()).getWalletAddress();
+        MemberDto memberDto = memberService.findMember(donationDto.getFromId());
+        String memberAddress = memberDto.getWalletAddress();
         String postAddress = postService.findPost(donationDto.getToId()).getWalletAddress();
 
         donationDto.setFromAddress(memberAddress);
         donationDto.setToAddress(postAddress);
         donationDto.setType(0L);
-
-        //TODO : 이건 내 privateKey 일 뿐임 나중에 삭제하기 복호화 알고리즘으로 처리하면 이거 필요없음
-        donationDto.setPrivateKey("210532c54c56fe8f221d55d6d7b462ae3fa831f0059b49769450d8812f21d6fa");
+        donationDto.setPrivateKey(memberDto.getPrivateKey());
 
         //String postAddress, String memberAddress, String privateKey, Long amount
         //TODO : privateKey 복호화 알고리즘으로 처리하기
@@ -56,6 +57,32 @@ public class DonationService {
         return donationDto;
     }
 
+    //post -> member
+    public DonationDto giveTokensToRescuer(DonationDto donationDto) throws TransactionException, IOException {
+
+        postService.updateStatus(donationDto.getFromId(), 2);
+        PostDto postDto = postService.findPost(donationDto.getFromId());
+        String postAddress = postDto.getWalletAddress();
+        String memberAddress = memberService.findMember(donationDto.getToId()).getWalletAddress();
+
+        donationDto.setFromAddress(postAddress);
+        donationDto.setToAddress(memberAddress);
+        donationDto.setType(1L);
+        donationDto.setPrivateKey(postDto.getPrivateKey());
+
+        //String postAddress, String memberAddress, String privateKey, Long amount
+        //TODO : privateKey 복호화 알고리즘으로 처리하기
+        donationDto = smartContractService.transfer(memberAddress, postAddress, donationDto);
+
+        Donation donation = this.buildDonation(donationDto);
+        donationRepository.save(donation);
+
+        memberService.receiveGOLtokens(donationDto.getToId(), donationDto.getAmount());
+        postService.updateGOLTokens(donationDto.getFromId(), donationDto.getAmount());
+
+        return donationDto;
+
+    }
     public List<DonationDto> findDonationsByMemberId(Long member_id) {
         //find member -> post
         List<Donation> donations = donationRepository.findByFromIdAndType(member_id, 0L);

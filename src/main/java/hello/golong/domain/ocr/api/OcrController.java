@@ -1,5 +1,6 @@
 package hello.golong.domain.ocr.api;
 
+import hello.golong.domain.donation.dto.DonationDto;
 import hello.golong.domain.ocr.application.OcrService;
 import hello.golong.domain.ocr.dto.OcrDto;
 import org.springframework.http.ResponseEntity;

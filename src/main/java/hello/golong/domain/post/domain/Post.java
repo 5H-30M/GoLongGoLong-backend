@@ -33,6 +33,10 @@ public class Post {
         this.raisedPeople = new_raised_people;
     }
 
+    public void updateGOLtokens(Long new_amount) {
+        this.amount = new_amount;
+    }
+
     @Id // pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, name = "post_id") // nullable = false

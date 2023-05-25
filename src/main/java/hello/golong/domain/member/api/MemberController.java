@@ -1,11 +1,8 @@
 package hello.golong.domain.member.api;
 
 import hello.golong.domain.member.application.MemberService;
-import hello.golong.domain.member.dto.KakaoProfile;
-import hello.golong.domain.member.dto.MemberDto;
+import hello.golong.domain.member.dto.*;
 
-import hello.golong.domain.member.dto.OauthToken;
-import hello.golong.domain.member.dto.WalletDto;
 import hello.golong.domain.post.dto.PostDto;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +70,12 @@ public class MemberController {
     public ResponseEntity<MemberDto> updateMemberInformation(@PathVariable("member_id") Long member_id, @RequestBody MemberDto memberDto) {
         return ResponseEntity.ok().body(memberService.updateMember(member_id, memberDto));
     }
+
+    @PatchMapping("/region/{member_id}")
+    public ResponseEntity<MemberDto> updateMemberRegion(@PathVariable("member_id") Long member_id, @RequestBody MemberDto memberDto) {
+        return ResponseEntity.ok().body(memberService.updateMember(member_id, memberDto));
+    }
+
 
 
 

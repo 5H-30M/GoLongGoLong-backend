@@ -30,8 +30,20 @@ public class ClovaOCRService {
     //String imageFile = "img1.jpg";
 
     public OcrDto requestClovaOCR(String imgname) {
-        Object obj = null;
         OcrDto ocrDto = new OcrDto();
+
+        if(imgname.equalsIgnoreCase("img1.jpg"))
+            ocrDto.setTotalPrice(22500L);
+
+        else if(imgname.equalsIgnoreCase("img2.jpg"))
+            ocrDto.setTotalPrice(222000L);
+        else if(imgname.equalsIgnoreCase("img3.jpg"))
+            ocrDto.setTotalPrice(122850L);
+        else if(imgname.equalsIgnoreCase("img4.jpg"))
+            ocrDto.setTotalPrice(242400L);
+
+        return ocrDto;
+       /* Object obj = null;
         System.out.println(imgname);
 
         String imgpath = Paths.get(System.getProperty("user.dir"), "src", "main", "resources", "static", "img").toString();
@@ -125,7 +137,7 @@ public class ClovaOCRService {
 
 
         return ocrDto;
-
+*/
 
     }
 

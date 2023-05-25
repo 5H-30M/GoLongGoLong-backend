@@ -1,5 +1,6 @@
 package hello.golong.domain.ocr.application;
 
+import hello.golong.domain.donation.dto.DonationDto;
 import hello.golong.domain.ocr.dto.OcrDto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,4 +20,5 @@ public class OcrService {
         //clovaOCRService.requestClovaOCR(file);
         return clovaOCRService.requestClovaOCR(str);
     }
+
 }

@@ -196,7 +196,17 @@ public class PostService {
     public void updateDonationInformation(Long post_id, Long amount) {
         Optional<Post> postOptional = postRepository.findById(post_id);
         postOptional.ifPresent(post -> {
-            post.updateDonationInformation(post.getAmount()+amount, post.getRaisedPeople()+1);
+            post.updateDonationInformation(post.getAmount() + amount, post.getRaisedPeople()+1);
         });
     }
+
+    @Transactional
+    public void updateGOLTokens(Long post_id, Long amount) {
+        Optional<Post> postOptional = postRepository.findById(post_id);
+        postOptional.ifPresent(post -> {
+            post.updateGOLtokens(post.getAmount() - amount);
+        });
+
+    }
+
 }

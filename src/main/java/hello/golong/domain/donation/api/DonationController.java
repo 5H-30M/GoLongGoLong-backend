@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.web3j.protocol.exceptions.TransactionException;
+import retrofit2.http.Path;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,6 +33,13 @@ public class DonationController {
     public ResponseEntity<List<DonationDto>> getDonations(@PathVariable("member_id") Long member_id) {
         return ResponseEntity.ok().body(donationService.findDonationsByMemberId(member_id));
     }
+
+
+    @PostMapping("/rescuer")
+    public ResponseEntity<DonationDto> giveTokenToRescuer(@RequestBody DonationDto donationDto) throws TransactionException, IOException {
+        return ResponseEntity.ok().body(donationService.giveTokensToRescuer(donationDto));
+    }
+
 
 
 }

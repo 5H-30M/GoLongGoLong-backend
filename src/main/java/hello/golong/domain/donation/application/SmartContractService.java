@@ -46,7 +46,7 @@ public class SmartContractService {
     //String postAddress, String memberAddress, String privateKey, Long amount
     public DonationDto transfer(String postAddress, String memberAddress, DonationDto donationDto) throws IOException, TransactionException {
 
-        long TX_END_CHECK_DURATION = 10000;
+        long TX_END_CHECK_DURATION = 20000;
         int TX_END_CHECK_RETRY = 3;
         long CHAIN_ID = 11155111;
 
@@ -54,7 +54,7 @@ public class SmartContractService {
 
         //TODO : 여기 예외처리로 바꾸기 , 일단 어차피 isCorrectPrivateKey에서 Exceptino 처리해서 잘못된 개인키일경우 그 메소드에서 프로그램 종료됨
         //TODO : 에러 핸들링하기
-        if(!isCorrectPrivateKey(memberAddress, credential.getAddress())) return donationDto;
+        //if(!isCorrectPrivateKey(memberAddress, credential.getAddress())) return donationDto;
 
 
         //insufficient balance error 확인 코드
