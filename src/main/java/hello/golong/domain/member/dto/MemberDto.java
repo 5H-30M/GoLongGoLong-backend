@@ -20,7 +20,10 @@ public class MemberDto {
 
     private String token;
 
-    private String name;//kakaoNickname
+    private String name;//kakaoName
+
+    private String nickName;
+
     private String profileImgUrl;//kakaoProfileImg
 
     private String snsEmail;//kakaoEmail
@@ -32,6 +35,8 @@ public class MemberDto {
     private String privateKey;
 
     private Boolean isVerified;
+
+    private String region;
 
     private LocalDateTime createdAt;
 

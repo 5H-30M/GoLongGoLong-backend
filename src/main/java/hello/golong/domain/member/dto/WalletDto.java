@@ -9,7 +9,6 @@ import lombok.*;
 @Setter
 @ToString
 public class WalletDto {
-
     String walletAddress;
     String privateKey;
 }

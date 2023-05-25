@@ -54,7 +54,7 @@ public class MemberService {
         member.updateWalletInformation(walletDto.getWalletAddress(), walletDto.getPrivateKey());
         return this.findMember(member_id);
     }
-
+/*
     public MemberDto findMemberBySnsEmail(String sns_email) {
 
         return getMemberDto(memberRepository.findBySnsEmail(sns_email));
@@ -62,17 +62,19 @@ public class MemberService {
         //return getMemberDto(memberRepository.findBySnsEmail(sns_email)
           //      .orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다.")));
 
-    }
+    }*/
 
 
 
 
     @Transactional
-    public MemberDto updateMember(MemberDto memberDto) {
-        Member member = memberRepository.findById(memberDto.getId())
+    public MemberDto updateMember(Long member_id, MemberDto memberDto) {
+        Member member = memberRepository.findById(member_id)
                 .orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         if(memberDto.getName() != null) member.updateName(memberDto.getName());
+        if(memberDto.getNickName() != null) member.updateNickName(memberDto.getNickName());
+        if(memberDto.getRegion() != null) member.updateRegion(memberDto.getRegion());
         if(memberDto.getGOLtokens() != null) member.updateGOLtokens(memberDto.getGOLtokens());
         if(memberDto.getIsVerified() != null) member.updateIsVerified(memberDto.getIsVerified());
         if(memberDto.getProfileImgUrl() != null) member.updateProfileImgUrl(memberDto.getProfileImgUrl());
@@ -194,6 +196,7 @@ public class MemberService {
                     .profileImgUrl(profile.getKakao_account().getProfile().getProfile_image_url())
                     .name(profile.getKakao_account().getProfile().getNickname())
                     .snsEmail(profile.getKakao_account().getEmail())
+                    .nickName(this.getNickName(profile.getKakao_account().getEmail()))
                     .userRole("ROLE_USER").build();
 
             memberRepository.save(member);
@@ -202,12 +205,11 @@ public class MemberService {
         return token;
     }
 
-
-    //TODO : 회원 기부내역 조회
-/*  public List<PostDto> findDonatedPost(Long id) {
-
+    //example@kakao.com -> 초기 닉네임 -> example
+    public String getNickName(String email) {
+        return email.split("@")[0];
     }
- */
+
 
         public MemberDto getMemberDto(Member member) {
             return MemberDto.builder()
@@ -223,6 +225,8 @@ public class MemberService {
                     .snsType(member.getSnsType())
                     .snsProfile(member.getSnsProfile())
                     .postsByMember(postService.findPostByUploaderId(member.getId()))
+                    .nickName(member.getNickName())
+                    .region(member.getRegion())
                     .build();
 
         }
