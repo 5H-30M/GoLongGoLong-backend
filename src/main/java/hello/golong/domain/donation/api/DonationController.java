@@ -2,6 +2,7 @@ package hello.golong.domain.donation.api;
 
 import hello.golong.domain.donation.application.DonationService;
 import hello.golong.domain.donation.dto.DonationDto;
+import hello.golong.domain.donation.dto.TrackingDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class DonationController {
     }
 
     @GetMapping("/{member_id}")
-    public ResponseEntity<List<DonationDto>> getDonations(@PathVariable("member_id") Long member_id) {
+    public ResponseEntity<List<TrackingDto>> getDonations(@PathVariable("member_id") Long member_id) {
         return ResponseEntity.ok().body(donationService.findDonationsByMemberId(member_id));
     }
 

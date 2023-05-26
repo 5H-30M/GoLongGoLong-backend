@@ -3,6 +3,7 @@ package hello.golong.domain.donation.application;
 import hello.golong.domain.donation.dao.DonationRepository;
 import hello.golong.domain.donation.domain.Donation;
 import hello.golong.domain.donation.dto.DonationDto;
+import hello.golong.domain.donation.dto.TrackingDto;
 import hello.golong.domain.member.application.MemberService;
 import hello.golong.domain.member.domain.Member;
 import hello.golong.domain.member.dto.MemberDto;
@@ -83,15 +84,29 @@ public class DonationService {
         return donationDto;
 
     }
-    public List<DonationDto> findDonationsByMemberId(Long member_id) {
+    public List<TrackingDto> findDonationsByMemberId(Long member_id) {
         //find member -> post
         List<Donation> donations = donationRepository.findByFromIdAndType(member_id, 0L);
-        List<DonationDto> donationDtos = new ArrayList<>();
+        List<TrackingDto> trackingDtos = new ArrayList<>();
         if(donations == null) donations = Collections.emptyList();
-        for(Donation donation : donations) {
-            donationDtos.add(this.buildDonationDto(donation, memberService.findMember(member_id).getPrivateKey()));
+        for(Donation donation :donations) {
+            PostDto postDto = postService.findPost(donation.getToId());
+            List<Donation> donationList = donationRepository.findByFromIdAndType(postDto.getPost_id(), 1L);
+            if(donationList.isEmpty()) donationList = Collections.emptyList();
+
+            trackingDtos.add(TrackingDto.builder()
+                            .post_id(postDto.getPost_id())
+                            .title(postDto.getTitle())
+                            .uploader_id(postDto.getUploader_id())
+                            .status(postDto.getStatus())
+                            .postTransaction(this.buildDonationDto(donationList.get(0)))
+                            .myTransaction(this.buildDonationDto(donation))
+                            .build());
+
+
         }
-        return donationDtos;
+        return trackingDtos;
+
     }
 
     public Donation buildDonation(DonationDto donationDto) {
@@ -118,6 +133,19 @@ public class DonationService {
                 .toId(donation.getToId())
                 .type(donation.getType())
                 .privateKey(privateKey)
+                .build();
+    }
+
+    public DonationDto buildDonationDto(Donation donation) {
+        return DonationDto.builder()
+                .transactionId(donation.getTransactionId())
+                .amount(donation.getAmount())
+                .transactionCreatedAt(donation.getCreatedAt())
+                .fromAddress(donation.getFromAddress())
+                .toAddress(donation.getToAddress())
+                .fromId(donation.getFromId())
+                .toId(donation.getToId())
+                .type(donation.getType())
                 .build();
     }
 

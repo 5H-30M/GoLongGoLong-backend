@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface DonationRepository extends JpaRepository<Donation, Long> {
     List<Donation> findByFromIdAndType(Long from_id, Long type);
+
 }
