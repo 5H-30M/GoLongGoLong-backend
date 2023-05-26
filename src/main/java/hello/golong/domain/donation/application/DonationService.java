@@ -88,21 +88,22 @@ public class DonationService {
         //find member -> post
         List<Donation> donations = donationRepository.findByFromIdAndType(member_id, 0L);
         List<TrackingDto> trackingDtos = new ArrayList<>();
-        if(donations == null) donations = Collections.emptyList();
+        if(donations == null) donations = new ArrayList<>();
         for(Donation donation :donations) {
             PostDto postDto = postService.findPost(donation.getToId());
             List<Donation> donationList = donationRepository.findByFromIdAndType(postDto.getPost_id(), 1L);
-            if(donationList.isEmpty()) donationList = Collections.emptyList();
 
-            trackingDtos.add(TrackingDto.builder()
-                            .post_id(postDto.getPost_id())
-                            .title(postDto.getTitle())
-                            .uploader_id(postDto.getUploader_id())
-                            .status(postDto.getStatus())
-                            .images(postDto.getImages())
-                            .postTransaction(this.buildDonationDto(donationList.get(0)))
-                            .myTransaction(this.buildDonationDto(donation))
-                            .build());
+            TrackingDto trackingDto = TrackingDto.builder()
+                    .post_id(postDto.getPost_id())
+                    .title(postDto.getTitle())
+                    .uploader_id(postDto.getUploader_id())
+                    .status(postDto.getStatus())
+                    .images(postDto.getImages())
+                    .myTransaction(this.buildDonationDto(donation))
+                    .build();
+            if(!donationList.isEmpty())
+                trackingDto.setPostTransaction(this.buildDonationDto(donationList.get(0)));
+            trackingDtos.add(trackingDto);
 
 
         }
