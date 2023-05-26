@@ -99,6 +99,7 @@ public class DonationService {
                             .title(postDto.getTitle())
                             .uploader_id(postDto.getUploader_id())
                             .status(postDto.getStatus())
+                            .images(postDto.getImages())
                             .postTransaction(this.buildDonationDto(donationList.get(0)))
                             .myTransaction(this.buildDonationDto(donation))
                             .build());
