@@ -13,6 +13,7 @@
 ## 😺 문제 상황 및 서비스 소개
 
 ![Frame 98](https://github.com/5H-30M/GoLongGoLong-backend/assets/70390323/c189d0d8-55d0-4020-8f18-5b245be7db3f)
+
 </br>
 
 ## 😺 UI
@@ -64,14 +65,22 @@
 
 ![Group 63](https://github.com/5H-30M/GoLongGoLong-backend/assets/70390323/738c79f4-d0ea-4a18-b560-a48c0fec8f00)
 
+</br>
 
 ## 😺 ERD
 ![KakaoTalk_20230609_153554991](https://github.com/5H-30M/GoLongGoLong-backend/assets/70390323/41501689-1d37-4404-b71c-192a1f346225)
+
 </br>
 
 ## 😺 프로젝트 포스터
 
 ![진짜포스터](https://github.com/5H-30M/GoLongGoLong-backend/assets/70390323/10e2fb54-eabc-4822-b3d7-23b17f4770e0)
+
+</br>
+
+## 😺 시연 영상
+[유튜브 시연 영상](https://www.youtube.com/watch?v=nInxWhelHqE)
+
 </br>
 
 ## 😺 프로젝트 참여 인원
