@@ -16,10 +16,13 @@
 </br>
 
 ## 😺 UI
-[UI FIGMA](https://www.figma.com/file/sCcmAu6x7oOPzeNhscMRFl/GoLong-GoLong?type=design&node-id=4%3A2338&t=tabtJ39twNhGcliH-1)
+* 전체 UI 보기 : [UI FIGMA](https://www.figma.com/file/sCcmAu6x7oOPzeNhscMRFl/GoLong-GoLong?type=design&node-id=4%3A2338&t=tabtJ39twNhGcliH-1)
+* 메인화면
+![메인](https://github.com/5H-30M/GoLongGoLong-backend/assets/70390323/5e7f7036-8016-4d03-afcd-2df1a344f379)
+
+</br>
 
 ## 😺 암호화폐 흐름
-![KakaoTalk_20230609_160441851](https://github.com/5H-30M/GoLongGoLong-backend/assets/70390323/92583912-27e2-4b07-bd52-d32825a7a6e5)
 </br>
 
 ## 😺 기술 스택
@@ -49,23 +52,26 @@
 ## 😺 주요기술
 
 ### smartcontract
+* 스마트 컨트랙트를 백엔드에서 호출해서 트리커한다. 
 ![기부 로직](https://github.com/5H-30M/GoLongGoLong-backend/assets/70390323/fbc9fd48-df0b-42dd-b555-fee81fa79723)
-
+* 암호화폐 흐름
+![KakaoTalk_20230609_160441851](https://github.com/5H-30M/GoLongGoLong-backend/assets/70390323/92583912-27e2-4b07-bd52-d32825a7a6e5)
 ### CLOVA OCR
+![OCR_리드미](https://github.com/5H-30M/GoLongGoLong-backend/assets/70390323/8509da6b-550e-439d-8af4-48b5582d2f92)
+</br> 
+
 </br>
 
-* 
-
-</br>
 ## 😺 System Architecture
 
 ![Group 63](https://github.com/5H-30M/GoLongGoLong-backend/assets/70390323/738c79f4-d0ea-4a18-b560-a48c0fec8f00)
+
 
 ## 😺 ERD
 ![KakaoTalk_20230609_153554991](https://github.com/5H-30M/GoLongGoLong-backend/assets/70390323/41501689-1d37-4404-b71c-192a1f346225)
 </br>
 
-## 😺 GoLongGoLong 프로젝트 포스터
+## 😺 프로젝트 포스터
 
 ![진짜포스터](https://github.com/5H-30M/GoLongGoLong-backend/assets/70390323/10e2fb54-eabc-4822-b3d7-23b17f4770e0)
 </br>
