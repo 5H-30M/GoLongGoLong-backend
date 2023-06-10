@@ -16,9 +16,12 @@ public class OcrService {
 
     //public void certifyPreReceipt(MultipartFile file)
     public OcrDto certifyPreReceipt(String str) {
-        //TODO : 임시 코드
         //clovaOCRService.requestClovaOCR(file);
         return clovaOCRService.requestClovaOCR(str);
+    }
+
+    public OcrDto certifyPreReceipt(MultipartFile file) {
+        return clovaOCRService.requestClovaOCR(file);
     }
 
 }

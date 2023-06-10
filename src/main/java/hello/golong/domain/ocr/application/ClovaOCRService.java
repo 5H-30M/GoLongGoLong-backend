@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,19 +32,6 @@ public class ClovaOCRService {
 
     public OcrDto requestClovaOCR(String imgname) {
         OcrDto ocrDto = new OcrDto();
-
-        if(imgname.equalsIgnoreCase("img1.jpg"))
-            ocrDto.setTotalPrice(22500L);
-
-        else if(imgname.equalsIgnoreCase("img2.jpg"))
-            ocrDto.setTotalPrice(222000L);
-        else if(imgname.equalsIgnoreCase("img3.jpg"))
-            ocrDto.setTotalPrice(122850L);
-        else if(imgname.equalsIgnoreCase("img4.jpg"))
-            ocrDto.setTotalPrice(242400L);
-
-        return ocrDto;
-       /* Object obj = null;
         System.out.println(imgname);
 
         String imgpath = Paths.get(System.getProperty("user.dir"), "src", "main", "resources", "static", "img").toString();
@@ -102,32 +90,9 @@ public class ClovaOCRService {
             System.out.println("image result JSON : " + response);
 
 
-            JSONParser jsonparser = new JSONParser();
-            obj = jsonparser.parse(response.toString());
-            JSONObject jsonObj = (JSONObject)obj;
 
+            ocrDto.setTotalPrice(this.extractPrice(response));
 
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            try {
-                JsonNode rootNode = objectMapper.readTree(String.valueOf(jsonObj));
-                JsonNode priceNode = rootNode.path("images")
-                        .path(0)
-                        .path("receipt")
-                        .path("result")
-                        .path("totalPrice")
-                        .path("price")
-                        .path("formatted");
-
-                // 가져온 값 출력
-                String price = priceNode.path("value").asText();
-                System.out.println("Total Price: " + price);
-                ocrDto.setTotalPrice(Long.parseLong(price));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            System.out.println(obj);
             //file.delete();
 
         } catch (Exception e) {
@@ -137,7 +102,7 @@ public class ClovaOCRService {
 
 
         return ocrDto;
-*/
+
 
     }
 
@@ -173,7 +138,43 @@ public class ClovaOCRService {
         }
         out.flush();
     }
- /*   public void requestClovaOCR(MultipartFile multipartFile) {
+    public Long extractPrice(StringBuffer response) throws ParseException {
+
+        Object obj = null;
+        Long resultPrice = null;
+
+        JSONParser jsonparser = new JSONParser();
+        obj = jsonparser.parse(response.toString());
+        JSONObject jsonObj = (JSONObject)obj;
+
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            JsonNode rootNode = objectMapper.readTree(String.valueOf(jsonObj));
+            JsonNode priceNode = rootNode.path("images")
+                    .path(0)
+                    .path("receipt")
+                    .path("result")
+                    .path("totalPrice")
+                    .path("price")
+                    .path("formatted");
+
+            // 가져온 값 출력
+            String price = priceNode.path("value").asText();
+            System.out.println("Total Price: " + price);
+            resultPrice = Long.parseLong(price);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(obj);
+
+        return resultPrice;
+    }
+    public OcrDto requestClovaOCR(MultipartFile multipartFile) {
+
+        OcrDto ocrDto = new OcrDto();
 
         try {
             URL url = new URL(apiURL);
@@ -195,15 +196,15 @@ public class ClovaOCRService {
             image.put("format", "jpg");
             image.put("name", "demo");
             JSONArray images = new JSONArray();
-            images.put(image);
+            images.add(image);
             json.put("images", images);
             String postParams = json.toString();
 
             con.connect();
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
             long start = System.currentTimeMillis();
-            //File file = this.multipartFileToFile(multipartFile);//TODO : 다시 확인하기
-            File file = new File(imageFile);
+            File file = this.multipartFileToFile(multipartFile);//TODO : 다시 확인하기
+            //File file = new File(imageFile);
             log.info("file={}", file);
             writeMultiPart(wr, postParams, file, boundary);
             wr.close();
@@ -223,11 +224,14 @@ public class ClovaOCRService {
             br.close();
 
             System.out.println(response);
+            ocrDto.setTotalPrice(this.extractPrice(response));
+
         } catch (Exception e) {
             System.out.println(e);
         }
+
+        return ocrDto;
     }
-*/
     public File multipartFileToFile(MultipartFile multipartFile) throws IOException {
         File file = new File(multipartFile.getOriginalFilename());
         multipartFile.transferTo(file);
