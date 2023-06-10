@@ -47,7 +47,7 @@ public class DonationService {
 
         //String postAddress, String memberAddress, String privateKey, Long amount
         //TODO : privateKey 복호화 알고리즘으로 처리하기
-        donationDto = smartContractService.transfer(postAddress, memberAddress, donationDto);
+        donationDto = smartContractService.transferGOL(postAddress, memberAddress, donationDto);
 
         Donation donation = this.buildDonation(donationDto);
         donationRepository.save(donation);
@@ -73,7 +73,7 @@ public class DonationService {
 
         //String postAddress, String memberAddress, String privateKey, Long amount
         //TODO : privateKey 복호화 알고리즘으로 처리하기
-        donationDto = smartContractService.transfer(memberAddress, postAddress, donationDto);
+        donationDto = smartContractService.transferGOL(memberAddress, postAddress, donationDto);
 
         Donation donation = this.buildDonation(donationDto);
         donationRepository.save(donation);
@@ -84,6 +84,11 @@ public class DonationService {
         return donationDto;
 
     }
+
+    public void giveSEthToMember(Long member_id) throws TransactionException, IOException {
+        smartContractService.transferSEth(memberService.findMember(member_id).getWalletAddress());
+    }
+
     public List<TrackingDto> findDonationsByMemberId(Long member_id) {
         //find member -> post
         List<Donation> donations = donationRepository.findByFromIdAndType(member_id, 0L);
