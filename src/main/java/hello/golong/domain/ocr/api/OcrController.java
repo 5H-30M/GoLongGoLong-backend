@@ -25,6 +25,8 @@ public class OcrController {
 
 
 
+
+
     public OcrController(OcrService ocrService) {
         this.ocrService = ocrService;
     }
