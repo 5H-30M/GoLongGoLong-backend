@@ -20,4 +20,8 @@ public class OcrService {
         return clovaOCRService.requestClovaOCR(str);
     }
 
+    public OcrDto certifyPreReceipt(MultipartFile file) {
+        return clovaOCRService.requestClovaOCR(file);
+    }
+
 }

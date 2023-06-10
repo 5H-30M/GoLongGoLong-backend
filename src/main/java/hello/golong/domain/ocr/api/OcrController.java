@@ -17,15 +17,18 @@ public class OcrController {
     private final OcrService ocrService;
 
     //TODO: RequestParam vs RequestBody
+
     @PostMapping("/{file_name}")
     public ResponseEntity<OcrDto> certifyPreReceipt(@PathVariable("file_name") String file_name) {
         //ocrService.certifyPreReceipt(file);
         return ResponseEntity.ok().body(ocrService.certifyPreReceipt(file_name));
     }
 
-
-
-
+    @PostMapping
+    public ResponseEntity<OcrDto> certifyPreReceipt(@RequestBody MultipartFile file) {
+        //ocrService.certifyPreReceipt(file);
+        return ResponseEntity.ok().body(ocrService.certifyPreReceipt(file));
+    }
 
     public OcrController(OcrService ocrService) {
         this.ocrService = ocrService;
