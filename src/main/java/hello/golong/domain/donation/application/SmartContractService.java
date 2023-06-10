@@ -35,22 +35,18 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 public class SmartContractService {
-
-    private String contractAddress = "0xb248d4cbb7c728ef0e81de0b4b17734aeed2d280";
     private String nodeUrl = "https://sepolia.infura.io/v3/ca7db5c20c11412084523bb7cbb7289d";
     private Web3j web3j = Web3j.build(new HttpService(nodeUrl));
 
     //TODO : donationDto를 여기까지 끌고오는 것은 시스템 구조상 좋지 않은것 같긴한데... 그치만 transactionId랑 시간 둘다 반환할 수 없으니까..
     //TODO : 아니면 List<String> 이라도 사용하는게 나은가..?
 
-    //String postAddress, String memberAddress, String privateKey, Long amount
-    public DonationDto transfer(String postAddress, String memberAddress, DonationDto donationDto) throws IOException, TransactionException {
-
+    public TransactionReceipt transfer(String contractFunctionName, String privateKey, Long amount, String contractAddress, String toAddress) throws IOException, TransactionException {
         long TX_END_CHECK_DURATION = 20000;
         int TX_END_CHECK_RETRY = 3;
         long CHAIN_ID = 11155111;
 
-        Credentials credential = Credentials.create(donationDto.getPrivateKey());
+        Credentials credential = Credentials.create(privateKey);
 
         //TODO : 여기 예외처리로 바꾸기 , 일단 어차피 isCorrectPrivateKey에서 Exceptino 처리해서 잘못된 개인키일경우 그 메소드에서 프로그램 종료됨
         //TODO : 에러 핸들링하기
@@ -63,8 +59,8 @@ public class SmartContractService {
         System.out.println("accountBalance = " + accountBalance.toString());
 
         List<Type> params = new ArrayList<>();
-        params.add(new Address(postAddress));
-        params.add(new Uint256(new BigInteger(String.valueOf(donationDto.getAmount()))));
+        params.add(new Address(toAddress));
+        params.add(new Uint256(new BigInteger(String.valueOf(amount))));
 
         List<TypeReference<?>> returnTypes = Collections.<TypeReference<?>>emptyList();
 
@@ -81,8 +77,8 @@ public class SmartContractService {
         ContractGasProvider gasProvider = new DefaultGasProvider();
 
         String txHash = manager.sendTransaction(
-                gasProvider.getGasPrice("transfer"),
-                gasProvider.getGasLimit("transfer"),
+                gasProvider.getGasPrice(contractFunctionName),
+                gasProvider.getGasLimit(contractFunctionName),
                 contractAddress,
                 txData,
                 BigInteger.ZERO
@@ -93,6 +89,14 @@ public class SmartContractService {
         System.out.println("Status = " + receipt.getStatus());
         System.out.println("TransactionHash = " + receipt.getTransactionHash());
 
+        return receipt;
+    }
+    //String postAddress, String memberAddress, String privateKey, Long amount
+    public DonationDto transferGOL(String postAddress, String memberAddress, DonationDto donationDto) throws IOException, TransactionException {
+
+        String contractAddress = "0xb248d4cbb7c728ef0e81de0b4b17734aeed2d280";
+
+        TransactionReceipt receipt = this.transfer("transfer", donationDto.getPrivateKey(), donationDto.getAmount(), contractAddress, postAddress);
         //EthBlock.Block block = web3.ethGetBlockByHash(blockHash, false).send().getBlock();
         EthBlock.Block block = web3j.ethGetBlockByHash(receipt.getBlockHash(), false).send().getBlock();
 
@@ -100,9 +104,25 @@ public class SmartContractService {
         Date date = new Date(timestamp * 1000);
         System.out.println("created At = " + date);
 
+        return setTransactionInformation(donationDto, receipt, date);
+
+    }
+    public void transferSEth(String memberAddress) throws TransactionException, IOException {
+        String contractAddressEth = "0x12768cfaf05c1bae761b098842ba66b1520a1d06eb4fdb8508827893d20a789a";
+        TransactionReceipt receipt = this.transfer("sendEther", "210532c54c56fe8f221d55d6d7b462ae3fa831f0059b49769450d8812f21d6fa", 1L, contractAddressEth, memberAddress);
+
+        EthBlock.Block block = web3j.ethGetBlockByHash(receipt.getBlockHash(), false).send().getBlock();
+
+        long timestamp = block.getTimestamp().longValue();
+        Date date = new Date(timestamp * 1000);
+        System.out.println("created At = " + date);
+
+    }
+    DonationDto setTransactionInformation(DonationDto donationDto, TransactionReceipt receipt, Date date) {
         donationDto.setTransactionId(receipt.getTransactionHash());
         donationDto.setTransactionCreatedAt(date);
         return donationDto;
+
     }
 
     public boolean isCorrectPrivateKey(String address, String addressByPrivateKey) {
