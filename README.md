@@ -83,6 +83,13 @@
 
 </br>
 
+## 😺 Repository
+* [FRONTEND](https://github.com/5H-30M/GoLongGoLong_frontend.git)
+* [BACKEND](https://github.com/5H-30M/GoLongGoLong-backend.git)
+* [BLOCKCHAIN](https://github.com/5H-30M/GoLongGoLong_blockchain.git)
+
+</br>
+
 ## 😺 프로젝트 참여 인원
 | 권영경 | 김다희 | 윤하은 |
 |------|------|------|
