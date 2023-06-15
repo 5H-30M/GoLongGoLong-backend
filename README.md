@@ -35,9 +35,11 @@
 ### backend
 <img src="https://img.shields.io/badge/Spring-6DB33F?style=flat&logo=Spring&logoColor=white"/></a>
 <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white"/></a>
+<img src="https://img.shields.io/badge/gradle-02303A?style=flat&logo=gradle&logoColor=white"/></a>
 <img src="https://img.shields.io/badge/MariaDB-003545?style=flat&logo=mariaDB&logoColor=white"></a>
 <img src="https://img.shields.io/badge/amazonrds-527FFF?style=flat&logo=amazonrds&logoColor=white"></a>
 <img src="https://img.shields.io/badge/amazonec2-FF9900?style=flat&logo=amazonec2&logoColor=white"></a>
+<img src="https://img.shields.io/badge/ubuntu-E95420?style=flat&logo=ubuntu&logoColor=white"></a>
 <img src="https://img.shields.io/badge/githubactions-2088FF?style=flat&logo=githubactions&logoColor=white">
 <img src="https://img.shields.io/badge/amazons3-569A31?style=flat&logo=amazons3&logoColor=white">
 ### blockchain
